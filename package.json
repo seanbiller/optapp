@@ -17,6 +17,6 @@
   },
   "homepage": "https://github.com/seanbiller/OPTapp#readme",
   "dependencies": {
-    "stl-reader": "^3.0.1"
+    "node-stl": "^0.7.0"
   }
 }

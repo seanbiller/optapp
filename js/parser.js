@@ -1,3 +1,5 @@
+const indexjs = require("index.js")
+
 const selectedFile = document.getElementById('input').files[0];
         NodeStl(selectedFile + '/myCool.stl', {density: 1.04});
                 console.log(stl.volume + 'cm^3');     // 21cm^3

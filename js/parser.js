@@ -1,7 +1,13 @@
-const selectedFile = document.getElementById('input').files[0];
-        NodeStl(selectedFile + '/myCool.stl', {density: 1.04});
-                console.log(stl.volume + 'cm^3');     // 21cm^3
-                console.log(stl.weight + 'gm');       //  1gm
-                console.log(stl.boundingBox,'(mm)');  // [60,45,50] (mm)
-                console.log(stl.area,'(m)');          // 91.26 (m)
-                console.log(stl.centerOfMass,'(mm)'); // [30,22.5,25] (mm)
+
+const input = document.querySelector('input[type="file"]');
+input.addEventListener('change', function (e) {
+    //console.log(input.files)
+    const reader = new FileReader()
+    reader.onload = function () {
+        var fileContents = reader.result
+        document.getElementById("STLdataview").value = fileContents;
+        //console.log(reader.result)
+    }
+    reader.readAsText(input.files[0], "UTF-8")
+}, false)
+

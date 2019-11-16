@@ -1,16 +1,18 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset ="UTF-8">
-<meta name ="programs" content ="HTML5,CSS">
-<meta name = "author" content ="Duucodes">
-<meta name ="viewport" content =" width=device=width, intial-scale-1.0">   
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <head>
+    <meta charset ="UTF-8">
+    <meta name ="programs" content ="HTML5,CSS">
+    <meta name = "author" content ="JanniksFavGroup">
+    <meta name ="viewport" content ="width=device=width, intial-scale-1.0">   
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  </head>
 </html>
-</head>
+
 <html>
   <head>
-    <link rel="stylesheet" type="text/css" href="css/styles.css" />
+    <link rel="stylesheet" type="text/css" href="./css/styles.css" />
+    <!--<script type="text/javascript" src="./js/parser.js"></script>-->
   </head>
   <body>
     <h1>OPT Industries</h1>
@@ -21,9 +23,12 @@
 <body>
     </div>
        <div>
-        <button>Upload an .stl file...
-            <input type="file" id="avatar" name="avatar" accept=".stl">
-        </button>
+          <button type="button">Upload an .stl file...
+              <input type="file" id="myFile" accept=".stl">
+              <script type="text/javascript" src="./js/parser.js"></script>
+          </button>
+          <p id="output"></p>
+          <textarea id="STLdataview" name="y" style="width:400px;height:150px;"></textarea>
       </div>
 </body>
 </html>

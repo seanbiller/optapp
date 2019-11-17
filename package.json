@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/seanbiller/OPTapp#readme",
   "dependencies": {
+    "express": "^4.17.1",
     "node-stl": "^0.7.0"
   }
 }

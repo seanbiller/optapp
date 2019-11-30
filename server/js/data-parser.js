@@ -1,7 +1,10 @@
+/* 
+This server-side .js file does the following...
+    1.) Receives an html form containing the user-uploaded .stl file from the client-side
+    2.) Uses the node-stl node module to parse the file's contents for the data that we need
+    3.) ...
+*/
 const NodeStl = require('node-stl')
-const express = require('express')
-const app = express()
-
 
 var stl = new NodeStl(__dirname + '/test-assets/Ball_10mm.stl');
 console.log('--------------------------------------------------------------------------------------')

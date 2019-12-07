@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+
+<html>
+
+  <head>
+      <script src="/client/scripts/index.js"></script>
+      <link rel="stylesheet" type="text/css" href="/client/css/index.css" />
+      <meta charset ="UTF-8">
+      <meta name ="programs" content ="HTML5,CSS">
+      <meta name ="viewport" content =" width=device=width, intial-scale-1.0">   
+      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  </head>
+
+  <!--Start of body tag-->
+  <body>
+    <header id="header" class="all_colors header_color dark_bg_color  av_header_top av_logo_left av_main_nav_header av_menu_right av_custom av_header_sticky av_header_shrinking_disabled av_header_stretch_disabled av_mobile_menu_tablet av_header_searchicon_disabled av_header_unstick_top av_minimal_header av_bottom_nav_disabled  av_alternate_logo_active av_header_border_disabled" role="banner" itemscope="itemscope" itemtype="https://schema.org/WPHeader" style="margin-top: 0px;">
+      <div id="header_main" class="container_wrap container_wrap_logo">
+        <div class="container av-logo-container" style>
+          <div class="inner-container">
+            <span class="logo">
+              <a href="http://optindustries.com/">
+                <img height="100" width="300" src="http://optindustries.com/wp-content/uploads/2019/09/LOGO_W-300x226.png" alt="OPT Industries Inc.">
+              </a>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="header_bg"></div>
+    </header>
+
+    <!--button for .stl file-->
+    <div class="div_2">
+      <form method="POST" action="/model-info" encType="multipart/form-data">
+        <button value="Select an .stl file...">
+          <input type="file" name="stlfile" accept=".stl" required>
+        </button>
+        <button>
+          <input type="submit" value="Generate Model">
+        </button>
+      </form>
+    </div>
+
+    <!--Footer-->
+    <div>
+      <footer>
+        <p> @ OPT Industries. All rights reserved.</p>
+      </footer>
+    </div>
+
+  </body>
+  <!--End of body-->
+
+</html>

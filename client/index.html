@@ -38,11 +38,10 @@
     </header>
 
     <script type="text/javascript">
-      function handleFiles(selectedFile) {
-        window.onload = function () {
-          STLViewer(selectedFile, "model")
-        }
+      window.onload = function() {
+          STLViewer("./client/scripts/fish.stl", "model")
       }
+      </script>
     </script>
     <!--button for .stl file-->
     <div class="div_2">
@@ -76,6 +75,8 @@
     <script src="/client/scripts/STLLoader.js"></script>
     <script src="/client/scripts/OrbitControls.js"></script>
     <script src="/client/scripts/stlViewer.js"></script>
+    <!-- <script src="/client/scripts/render.js"></script> -->
+
 
 
   </body>

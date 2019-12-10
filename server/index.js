@@ -27,10 +27,10 @@ app.post('/model-info', (request, response) => {
   // use the servers console to show what files came in
   console.log(request.files)
 
-  //__dirname is the current directory 
-  console.log({__dirname})
-  const uploadPath = `${__dirname}/_uploads`
-  console.log({uploadPath})
+  // //__dirname is the current directory 
+  // console.log({__dirname})
+  // const uploadPath = `${__dirname}/_uploads`
+  // console.log({uploadPath})
 
   // process the stl file raw content as uploaded
   let stlData = new NodeStl(request.files.stlfile.data, {density: 1.04})

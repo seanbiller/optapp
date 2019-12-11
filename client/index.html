@@ -1,86 +1,54 @@
 <!DOCTYPE html>
-
 <html>
 
 <head>
-  <script src="/client/scripts/index.js"></script>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-  <link rel="stylesheet" type="text/css" href="/client/css/index.css" />
-  <meta charset="UTF-8">
-  <meta name="programs" content="HTML5,CSS">
-  <meta name="viewport" content=" width=device=width, intial-scale-1.0">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta charset="UTF-8">
+    <title>STL Model Viewer</title>
+    <script>
+        function generateSTL() {
+            let nBytes = 0,
+                oFiles = document.getElementById("uploadInput").files,
+                nFiles = oFiles.length;
+
+            for (let nFileId = 0; nFileId < nFiles; nFileId++) {
+                var file = oFiles[nFileId];
+
+                // set your file encoding
+                var encoding = 'ISO-8859-1';
+
+                // create a file reader
+                var reader = new FileReader();
+
+                // set on load handler for reader
+                reader.onload = function (e) {
+                    var result = reader.result;
+                    
+                    // parse using your corresponding loader
+                    let loader = new THREE.STLLoader();
+
+                    let geometry = loader.parse(result);
+                    STLViewerHTML5(geometry, "model")
+                }
+
+                // read the file as text using the reader
+                reader.readAsText(file, encoding);
+            }
+        }
+    </script>
 </head>
 
-<!--Start of body tag-->
-<div class="h-100 row align-items-center">
-
-  <body>
-
-    <header id="header"
-      class="all_colors header_color dark_bg_color  av_header_top av_logo_left av_main_nav_header av_menu_right av_custom av_header_sticky av_header_shrinking_disabled av_header_stretch_disabled av_mobile_menu_tablet av_header_searchicon_disabled av_header_unstick_top av_minimal_header av_bottom_nav_disabled  av_alternate_logo_active av_header_border_disabled"
-      role="banner" itemscope="itemscope" itemtype="https://schema.org/WPHeader" style="margin-top: 0px;">
-      <div id="header_main" class="container_wrap container_wrap_logo">
-        <div class="container av-logo-container" style>
-          <div class="inner-container">
-            <span class="logo">
-              <a href="http://optindustries.com/">
-                <img height="100" width="300"
-                  src="http://optindustries.com/wp-content/uploads/2019/09/LOGO_W-300x226.png"
-                  alt="OPT Industries Inc.">
-              </a>
-            </span>
-          </div>
-        </div>
-      </div>
-      <div class="header_bg"></div>
-    </header>
-
-    <script type="text/javascript">
-      window.onload = function() {
-          STLViewer("./client/scripts/fish.stl", "model")
-      }
-      </script>
-    </script>
-    <!--button for .stl file-->
-    <div class="div_2">
-      <form method="POST" action="/model-info" encType="multipart/form-data">
-
-        <button value="Select an .stl file...">
-          <input type="file" name="stlfile" id="input" accept=".stl" required onchange="handleFiles(this.files)">
-        </button>
-
-        <button type="submit" class="btn btn-danger">Generate Model</button>
-
-      </form>
-    </div>
-
+<body onload="generateSTL();">
+    <form name="uploadForm">
+        <p><input id="uploadInput" type="file" name="myFiles" onchange="generateSTL();" multiple> selected files: <span
+                id="fileNum">0</span>; total size: <span id="fileSize">0</span></p>
+        <p><input type="submit" value="Send file"></p>
+    </form>
     <div id="model" style="width: 500px; height: 500px"> </div>
 
-
-    <!--Footer-->
-    <div>
-      <footer>
-        <p> @ OPT Industries. All rights reserved.</p>
-      </footer>
-    </div>
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-      integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous">
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-      integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
-    </script>
     <script src="/client/scripts/three.min.js"></script>
     <script src="/client/scripts/STLLoader.js"></script>
     <script src="/client/scripts/OrbitControls.js"></script>
-    <script src="/client/scripts/stlViewer.js"></script>
-    <!-- <script src="/client/scripts/render.js"></script> -->
-
-
-
-  </body>
-</div>
-<!--End of body-->
+    <script src="/client/scripts/STLViewerHTML5.js"></script>
+</body>
 
 </html>

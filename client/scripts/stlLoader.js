@@ -99,9 +99,16 @@ THREE.STLLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype
 
 			var expect, face_size, n_faces, reader;
 			reader = new DataView( data );
-			face_size = ( 32 / 8 * 3 ) + ( ( 32 / 8 * 3 ) * 3 ) + ( 16 / 8 );
+			face_size = 50; // ( 32 / 8 * 3 ) + ( ( 32 / 8 * 3 ) * 3 ) + ( 16 / 8 );
+			console.log("Face Size: " + face_size)
 			n_faces = reader.getUint32( 80, true );
-			expect = 80 + ( 32 / 8 ) + ( n_faces * face_size );
+			console.log("# of faces: " + n_faces)
+			expect = 80 + ( 32 / 8 ) + face_size * n_faces;
+
+			// Testing getFloat32() out of bounds access error occuring further down in this file when attempting to load a large stl file
+			console.log("Expected: " + expect)
+			console.log("DataView Byte Length: " + reader.byteLength)
+			console.log("Difference: " + (expect - reader.byteLength))
 
 			if ( expect === reader.byteLength ) {
 
@@ -130,7 +137,7 @@ THREE.STLLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype
 			}
 
 			// Couldn't find "solid" text at the beginning; it is binary STL.
-
+			console.log("This is a binary stl file")
 			return true;
 
 		}
@@ -188,7 +195,10 @@ THREE.STLLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype
 
 			for ( var face = 0; face < faces; face ++ ) {
 
-				var start = dataOffset + face * faceLength;
+				var start = dataOffset + (face * faceLength);
+				if (start >= reader.byteLength) { break; }
+				//console.log(`Byte Offset for triangle #${face}: ${start}`)
+				//console.log(`DataView Byte Length from Offset: ${reader.byteLength}`)
 				var normalX = reader.getFloat32( start, true );
 				var normalY = reader.getFloat32( start + 4, true );
 				var normalZ = reader.getFloat32( start + 8, true );

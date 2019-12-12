@@ -4,11 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-<<<<<<< HEAD
-    "dev": "./node_modules/.bin/nodemon server/index.js",
-=======
     "dev": "./node_modules/.bin/nodemon ./server/index.js",
->>>>>>> c31ec0bd4c692e3c90337578c3c02b188b3a5323
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

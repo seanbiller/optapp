@@ -196,9 +196,7 @@ THREE.STLLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype
 			for ( var face = 0; face < faces; face ++ ) {
 
 				var start = dataOffset + (face * faceLength);
-				if (start >= reader.byteLength) { break; }
-				//console.log(`Byte Offset for triangle #${face}: ${start}`)
-				//console.log(`DataView Byte Length from Offset: ${reader.byteLength}`)
+				if (start >= reader.byteLength || start + 48 >= reader.byteLength) { break; }
 				var normalX = reader.getFloat32( start, true );
 				var normalY = reader.getFloat32( start + 4, true );
 				var normalZ = reader.getFloat32( start + 8, true );
@@ -249,6 +247,9 @@ THREE.STLLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype
 				}
 
 			}
+
+			console.log(`Byte Offset for triangle #${face}: ${start}`)
+			console.log(`DataView Byte Length from Offset: ${reader.byteLength}`)
 
 			geometry.setAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
 			geometry.setAttribute( 'normal', new THREE.BufferAttribute( normals, 3 ) );

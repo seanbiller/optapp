@@ -21,17 +21,24 @@
 
                 // set on load handler for reader
                 reader.onload = function (e) {
-                    var result = reader.result;
+                    var contents = reader.result;
                     
                     // parse using your corresponding loader
                     let loader = new THREE.STLLoader();
 
-                    let geometry = loader.parse(result);
+                    let geometry = loader.parse(contents);
                     STLViewerHTML5(geometry, "model")
                 }
 
                 // read the file as text using the reader
-                reader.readAsText(file, encoding);
+                //reader.readAsText(file, encoding);
+                if ( reader.readAsBinaryString !== undefined ) {
+                    reader.readAsBinaryString( file );
+                } 
+                
+                else {
+                    reader.readAsArrayBuffer( file );
+                    }
             }
         }
     </script>

@@ -1,3 +1,8 @@
+html {
+  height: 100%;
+  margin: 0;
+}
+
 h1 {
   color: white;
 }
@@ -6,16 +11,33 @@ h2 {
   color: white;
 }
 
+.inner-container {
+  position: relative;
+  background-color: black;
+  height: 100%;
+  width: 100%;
+}
+
+.logo {
+  display: block;
+  width: 20%;
+  left: 10%;
+}
+
+img {
+  height: auto !important;
+  width: auto;
+  max-width: 100%;
+  display: block;
+  max-height: 80px;
+}
 
 body {
   background-image: url("http://optindustries.com/wp-content/uploads/2019/09/comingsoon.jpg");
   background-color: #000000;
   background-repeat: no-repeat;
   background-size: auto;
-
 }
-
-
 
 footer {
   display: flex;

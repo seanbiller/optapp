@@ -1,7 +1,7 @@
-function STLViewerHTML5(geometry, elementID) {
+function STLModelViewer(geometry, elementID) {
     var elem = document.getElementById(elementID)
 
-    var camera = new THREE.PerspectiveCamera(55, elem.clientWidth / elem.clientHeight, .1, 1000);
+    var camera = new THREE.PerspectiveCamera(55, elem.clientWidth / elem.clientHeight, .01, 1000);
 
     var renderer = new THREE.WebGLRenderer({
       antialias: true,
@@ -27,7 +27,7 @@ function STLViewerHTML5(geometry, elementID) {
     var scene = new THREE.Scene();
     scene.add(new THREE.HemisphereLight(0xffffff, 1.5));
 
-    camera.position.set(0, 0, 100);
+    camera.position.set(0, 0, 0);
 		scene.add(camera);
 
     geometry.computeVertexNormals()
@@ -40,19 +40,26 @@ function STLViewerHTML5(geometry, elementID) {
       // Provides a default color as well as a metallic material to simulate natural reflection of light
       var material = new THREE.MeshStandardMaterial();
     }
+    material.side = THREE.DoubleSide;
+
     var mesh = new THREE.Mesh(geometry, material);
     scene.add(mesh);
 
     geometry.computeBoundingBox();
     var bbox = geometry.boundingBox;
     var visualBbox = new THREE.Box3Helper(bbox, 0xffff00 );
+    let middle = new THREE.Vector3(geometry.center());
+
+    bbox.getSize(middle);
+    console.log("Part Dimensions: " + JSON.stringify(middle));
+
     scene.add(visualBbox);
-    geometry.center()
+    geometry.center();
 
     var largestDimension = Math.max(geometry.boundingBox.max.x,
       geometry.boundingBox.max.y,
       geometry.boundingBox.max.z)
-    camera.position.z = largestDimension * 1.5;
+    camera.position.z = largestDimension * 3.5;
     camera.position.y = largestDimension * 1.5;
   
     var pointLight = new THREE.PointLight(0xffffff, 0.3);

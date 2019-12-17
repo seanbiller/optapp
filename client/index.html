@@ -51,14 +51,17 @@
                         */
 
                     let geometry = loader.parse(contents);
-                    STLViewerHTML5(geometry, "model")
+                    STLModelViewer(geometry, "model");
+
+                    let vol = getVolume(geometry);
+                    console.log("Part Volume: " + vol.toFixed(2)+ " mm^3");
                 }
 
                 // read the file using the reader
                 if ( reader.readAsBinaryString !== undefined ) {
-                    reader.readAsBinaryString( file );
+                    reader.readAsBinaryString(file);
                 } 
-                else { reader.readAsArrayBuffer( file ); }
+                else { reader.readAsArrayBuffer(file); }
 
             }
         </script>
@@ -78,6 +81,7 @@
         <script src="/client/scripts/STLLoader.js"></script>
         <script src="/client/scripts/OrbitControls.js"></script>
         <script src="/client/scripts/STLViewerHTML5.js"></script>
+        <script src="/client/scripts/calculations.js"></script>
         
         <!-- Latest compiled and minified JavaScript -->
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

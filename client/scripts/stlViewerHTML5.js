@@ -1,7 +1,7 @@
 function STLViewerHTML5(geometry, elementID) {
     var elem = document.getElementById(elementID)
 
-    var camera = new THREE.PerspectiveCamera(45, elem.clientWidth / elem.clientHeight, 0.1, 1000);
+    var camera = new THREE.PerspectiveCamera(55, elem.clientWidth / elem.clientHeight, .1, 1000);
 
     var renderer = new THREE.WebGLRenderer({
       antialias: true,

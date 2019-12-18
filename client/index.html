@@ -1,100 +1,120 @@
 <!DOCTYPE html>
 <html>
 
-    <head>
-        <meta charset="UTF-8">
-        <!-- mobile setting -->
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-        <!-- Latest compiled and minified CSS Bootstrap -->
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">    
-        <!-- Style sheet that links the CSS to the HTML. -->
-        <link rel="stylesheet" type="text/css" href="client/css/index.css" />
-       
-        <title>STL Model Viewer</title>
-        
-        <!-- OPT logo html  -->
-        <header id='header' role="banner">
-            <div id='header_main'>
-                <div class='inner-container'>
-                    <span class="logo">
-                        <img height="100" width="300" src="http://optindustries.com/wp-content/uploads/2019/09/LOGO_W-300x226.png" alt="OPT Industries Inc.">
-                    </span>
-                </div>
+<head>
+    <meta charset="UTF-8">
+    <!-- mobile setting -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <!-- Latest compiled and minified CSS Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <!-- Style sheet that links the CSS to the HTML. -->
+    <link rel="stylesheet" type="text/css" href="client/css/index.css" />
+    <!-- JsPdf CDN for creating PDF of Page -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
+
+    <title>STL Model Viewer</title>
+
+    <!-- OPT logo html  -->
+    <header id='header' role="banner">
+        <div id='header_main'>
+            <div class='inner-container'>
+                <span class="logo">
+                    <img height="100" width="300"
+                        src="http://optindustries.com/wp-content/uploads/2019/09/LOGO_W-300x226.png"
+                        alt="OPT Industries Inc.">
+                </span>
             </div>
-        </header>
-        <!-- End of OPT logo html -->
+        </div>
+    </header>
+    <!-- End of OPT logo html -->
 
-        <script>
-            function generateSTL() {
-                var file = document.getElementById("uploadInput").files[0]
-                var reader = new FileReader();
+    <script>
+        function generateSTL() {
+            var file = document.getElementById("uploadInput").files[0]
+            var reader = new FileReader();
 
-                // set "on load" handler for reader
-                reader.onload = function (e) {
-                    var contents = reader.result;
-                    let loader = new THREE.STLLoader();
+            // set "on load" handler for reader
+            reader.onload = function (e) {
+                var contents = reader.result;
+                let loader = new THREE.STLLoader();
 
-                    /* -For those who are curious- 
-                        *
-                        * Although the stlLoader module has a .load() function
-                        * that takes in a static file path as a parameter
-                        * and passes it on to the file's .parse() function to
-                        * read through it's contents, returning the parsed result
-                        * as a bufferGeometry object, we omitted .load() from our code
-                        * due to the fact that it couldn't take in a user-uploaded file
-                        * as a parameter. 
-                        * 
-                        * We worked around this by plugging the file's data directly 
-                        * into loader.parse() and setting it equal to the variabe 'geometry',
-                        * bypassing the need for .load() altogether (we hope), and allowing us
-                        * to move on to generating our scene.
-                        */
+                /* -For those who are curious- 
+                 *
+                 * Although the stlLoader module has a .load() function
+                 * that takes in a static file path as a parameter
+                 * and passes it on to the file's .parse() function to
+                 * read through it's contents, returning the parsed result
+                 * as a bufferGeometry object, we omitted .load() from our code
+                 * due to the fact that it couldn't take in a user-uploaded file
+                 * as a parameter. 
+                 * 
+                 * We worked around this by plugging the file's data directly 
+                 * into loader.parse() and setting it equal to the variabe 'geometry',
+                 * bypassing the need for .load() altogether (we hope), and allowing us
+                 * to move on to generating our scene.
+                 */
 
-                    let geometry = loader.parse(contents);
-                    STLModelViewer(geometry, "model");
+                let geometry = loader.parse(contents);
+                STLModelViewer(geometry, "model");
 
-                    let vol = getVolume(geometry);
-                    console.log("Part Volume: " + vol.toFixed(2)+ " mm^3");
-                }
-
-                // read the file using the reader
-                if ( reader.readAsBinaryString !== undefined ) {
-                    reader.readAsBinaryString(file);
-                } 
-                else { reader.readAsArrayBuffer(file); }
-
+                let vol = getVolume(geometry);
+                console.log("Part Volume: " + vol.toFixed(2) + " mm^3");
             }
-        </script>
-    </head>
 
-    <body onload="generateSTL();">
+            // read the file using the reader
+            if (reader.readAsBinaryString !== undefined) {
+                reader.readAsBinaryString(file);
+            } else {
+                reader.readAsArrayBuffer(file);
+            }
 
-        <form name="uploadForm">
-            <input id="uploadInput" type="file" name="myFiles" onchange="generateSTL();" multiple>
-        </form>
+        }
+    </script>
 
-        <div align="center" </div>
-        <div id="model" style="width: 400px; height: 400px"> </div>
+</head>
 
-        <!-- JavaScript modules being used  -->
-        <script src="/client/scripts/three.min.js"></script>
-        <script src="/client/scripts/STLLoader.js"></script>
-        <script src="/client/scripts/OrbitControls.js"></script>
-        <script src="/client/scripts/STLViewerHTML5.js"></script>
-        <script src="/client/scripts/calculations.js"></script>
-        
-        <!-- Latest compiled and minified JavaScript -->
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<body onload="generateSTL();">
 
-    </body>
+    <button class="button" onclick="demoFromHTML()">Export to PDF</button>
 
-    <!-- Footer  -->
-    <div>
-        <footer>
-            <p> @ OPT Industries. All rights reserved.</p>
-        </footer>
+    <div id="content" style='display:none'>
+        <p>A PDF in all its glory!</p>
     </div>
+
+    <form name="uploadForm">
+        <input id="uploadInput" type="file" name="myFiles" onchange="generateSTL();">
+    </form>
+
+    <div id="model" class="center" style="width: 400px; height: 400px"> </div>
+
+    <!-- JavaScript modules being used  -->
+    <script src="/client/scripts/three.min.js"></script>
+    <script src="/client/scripts/STLLoader.js"></script>
+    <script src="/client/scripts/OrbitControls.js"></script>
+    <script src="/client/scripts/STLViewerHTML5.js"></script>
+    <script src="/client/scripts/calculations.js"></script>
+    <script src="/client/scripts/pdf.js"></script>
+
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
+    </script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
+    </script>
+
+</body>
+
+<!-- Footer  -->
+<div>
+    <footer>
+        <p> @ OPT Industries. All rights reserved.</p>
+    </footer>
+</div>
 
 </html>

@@ -36,9 +36,8 @@ function signedVolumeOfTriangle(p1, p2, p3) {
 }
 
 function calculatePrintingPrice(volume, printTime, resinType) {
-    //not implemented yet
     let inLiters = volume * 0.0000010 //convert to Liters
-    //switch statment each case is a type of resin
+    // Each case below is a type of resin
     switch(resinType) {
         case 'pcLightgrey':
             return inLiters * 59.90;
@@ -55,4 +54,36 @@ function calculatePrintingPrice(volume, printTime, resinType) {
         default:
             return 0;
     }
-   }
+}
+
+function re_real_price() {
+    var x = document.getElementById('material1').value;
+    var vl = vol.toFixed(2);
+    switch (x)
+    {
+      case 'PCLG':
+        var price = 59.90 * (vl/1000000);
+        document.getElementById('esprice1').innerHTML = '$' + price.toFixed(2) + ' USD';
+        break;
+      case 'PCTR':
+        var price = 69.98 * (vl/1000000);
+        document.getElementById('esprice1').innerHTML = '$' + price.toFixed(2) + ' USD';
+        break;
+      case 'P3D':
+        var price = 76.90 * (vl/1000000);
+        document.getElementById('esprice1').innerHTML = '$' + price.toFixed(2) + ' USD';
+        break;
+      case 'BCO':
+        var price = 138.69 * (vl/1000000);
+        document.getElementById('esprice1').innerHTML = '$' + price.toFixed(2) + ' USD';
+        break;
+      case 'BCx5':
+        var price = 142.99 * (vl/1000000);
+        document.getElementById('esprice1').innerHTML = '$' + price.toFixed(2) + ' USD';
+        break;
+      case 'ZRS':
+        var price = 345.99 * (vl/1000000);
+        document.getElementById('esprice1').innerHTML = '$' + price.toFixed(2) + ' USD';
+        break;
+    }
+}

@@ -9,6 +9,8 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">    
         <!-- Style sheet that links the CSS to the HTML. -->
         <link rel="stylesheet" type="text/css" href="client/css/index.css" />
+        <!-- JsPdf CDN for creating PDF of Page -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
        
         <title>STL Model Viewer</title>
         
@@ -58,7 +60,7 @@
                 }
 
                 // read the file using the reader
-                if ( reader.readAsBinaryString !== undefined ) {
+                if (reader.readAsBinaryString !== undefined) {
                     reader.readAsBinaryString(file);
                 } 
                 else { reader.readAsArrayBuffer(file); }
@@ -68,6 +70,12 @@
     </head>
 
     <body onload="generateSTL();">
+
+        <button class="button" onclick="pdfFromHTML()">Export to PDF</button>
+
+        <div id="content" style='display:none'>
+            <p>A PDF in all its glory!</p>
+        </div>
 
         <form name="uploadForm">
             <input id="uploadInput" type="file" name="myFiles" onchange="generateSTL();" multiple>
@@ -82,6 +90,7 @@
         <script src="/client/scripts/OrbitControls.js"></script>
         <script src="/client/scripts/STLViewerHTML5.js"></script>
         <script src="/client/scripts/calculations.js"></script>
+        <script src="/client/scripts/pdf.js"></script>
         
         <!-- Latest compiled and minified JavaScript -->
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

@@ -40,7 +40,7 @@ function STLModelViewer(geometry, elementID) {
       // Provides a default color as well as a metallic material to simulate natural reflection of light
       var material = new THREE.MeshStandardMaterial();
     }
-    // THREE.DoubleSide not supported in Internet Explorer
+    //NOTE: THREE.DoubleSide not supported in Internet Explorer
     material.side = THREE.DoubleSide;
 
     var mesh = new THREE.Mesh(geometry, material);
@@ -48,7 +48,7 @@ function STLModelViewer(geometry, elementID) {
 
     geometry.computeBoundingBox();
     var bbox = geometry.boundingBox;
-    var visualBbox = new THREE.Box3Helper(bbox, 0xffff00 );
+    var visualBbox = new THREE.Box3Helper(bbox, 0xffff00); // Bounding box of model
     let middle = new THREE.Vector3(geometry.center());
 
     bbox.getSize(middle);

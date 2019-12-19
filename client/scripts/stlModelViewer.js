@@ -1,7 +1,7 @@
-function STLModelViewer(geometry, elementID) {
+function stlModelViewer(geometry, elementID) {
     var elem = document.getElementById(elementID)
 
-    var camera = new THREE.PerspectiveCamera(55, elem.clientWidth / elem.clientHeight, .01, 1000);
+    var camera = new THREE.PerspectiveCamera(55, elem.clientWidth / elem.clientHeight, .01, 10000);
 
     var renderer = new THREE.WebGLRenderer({
       antialias: true,
@@ -52,7 +52,7 @@ function STLModelViewer(geometry, elementID) {
     let middle = new THREE.Vector3(geometry.center());
 
     bbox.getSize(middle);
-    console.log("Part Dimensions: " + JSON.stringify(middle));
+    console.log("Dimensions of Model's Bounding-Box: " + JSON.stringify(middle));
 
     scene.add(visualBbox);
     geometry.center();

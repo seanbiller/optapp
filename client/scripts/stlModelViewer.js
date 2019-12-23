@@ -1,7 +1,7 @@
-function STLModelViewer(geometry, elementID) {
+function stlModelViewer(geometry, elementID) {
     var elem = document.getElementById(elementID)
 
-    var camera = new THREE.PerspectiveCamera(55, elem.clientWidth / elem.clientHeight, .01, 1000);
+    var camera = new THREE.PerspectiveCamera(55, elem.clientWidth / elem.clientHeight, .01, 10000);
 
     var renderer = new THREE.WebGLRenderer({
       antialias: true,
@@ -40,6 +40,7 @@ function STLModelViewer(geometry, elementID) {
       // Provides a default color as well as a metallic material to simulate natural reflection of light
       var material = new THREE.MeshStandardMaterial();
     }
+    //NOTE: THREE.DoubleSide not supported in Internet Explorer
     material.side = THREE.DoubleSide;
 
     var mesh = new THREE.Mesh(geometry, material);
@@ -47,11 +48,11 @@ function STLModelViewer(geometry, elementID) {
 
     geometry.computeBoundingBox();
     var bbox = geometry.boundingBox;
-    var visualBbox = new THREE.Box3Helper(bbox, 0xffff00 );
+    var visualBbox = new THREE.Box3Helper(bbox, 0xffff00); // Bounding box of model
     let middle = new THREE.Vector3(geometry.center());
 
     bbox.getSize(middle);
-    console.log("Part Dimensions: " + JSON.stringify(middle));
+    console.log("Dimensions of Model's Bounding-Box: " + JSON.stringify(middle));
 
     scene.add(visualBbox);
     geometry.center();

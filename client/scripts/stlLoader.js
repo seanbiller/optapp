@@ -100,20 +100,13 @@ THREE.STLLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype
 			var expect, face_size, n_faces, reader;
 			reader = new DataView( data );
 			face_size = 50; // ( 32 / 8 * 3 ) + ( ( 32 / 8 * 3 ) * 3 ) + ( 16 / 8 );
-			console.log("Face Size: " + face_size)
 			n_faces = reader.getUint32( 80, true );
-			console.log("# of faces: " + n_faces)
 			expect = 80 + ( 32 / 8 ) + face_size * n_faces;
 
-			// Testing getFloat32() out of bounds access error occuring further down in this file when attempting to load a large stl file
-			console.log("Expected: " + expect)
-			console.log("DataView Byte Length: " + reader.byteLength)
-			console.log("Difference: " + (expect - reader.byteLength))
+			console.log("Number of Triangles: " + n_faces)
 
 			if ( expect === reader.byteLength ) {
-
 				return true;
-
 			}
 
 			// An ASCII STL data must begin with 'solid ' as the first six bytes.
@@ -136,8 +129,6 @@ THREE.STLLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype
 
 			}
 
-			// Couldn't find "solid" text at the beginning; it is binary STL.
-			console.log("This is a binary stl file")
 			return true;
 
 		}
@@ -247,9 +238,6 @@ THREE.STLLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype
 				}
 
 			}
-
-			console.log(`Byte Offset for triangle #${face}: ${start}`)
-			console.log(`DataView Byte Length from Offset: ${reader.byteLength}`)
 
 			geometry.setAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
 			geometry.setAttribute( 'normal', new THREE.BufferAttribute( normals, 3 ) );

@@ -7,7 +7,13 @@
         <!-- Latest compiled and minified CSS Bootstrap -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">    
         <!-- Style sheet that links the CSS to the HTML. -->
+<<<<<<< HEAD
     <link rel="stylesheet" type="text/css" href="client/css/index.css" />
+=======
+        <link rel="stylesheet" type="text/css" href="client/css/index.css" />
+        <!-- JsPdf CDN for creating PDF of Page -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
+>>>>>>> b425be5bb187bc4f15666302178259f06bdec6a9
        
     <title>STL Model Viewer</title>
         
@@ -22,6 +28,7 @@
             </div>
         </header>
         <!-- End of OPT logo html -->
+<<<<<<< HEAD
 
         <script>
             var vol = getVolume(geometry)
@@ -67,6 +74,8 @@
 
             }
         </script>
+=======
+>>>>>>> b425be5bb187bc4f15666302178259f06bdec6a9
     </head>
     <!-- <div align="left"</div>
     <div class="cinfo">
@@ -110,36 +119,51 @@
              </span></div>
         </html>
 
-    <body onload="generateSTL();">
 
+    <body>
         <form name="uploadForm">
-            <input id="uploadInput" type="file" name="myFiles" onchange="generateSTL();" multiple>
+            <input id="uploadInput" type="file" name="myFiles" onchange="processStl();">
         </form>
 
+<<<<<<< HEAD
         <div align="center"</div>
         <div id="model" style="width: 400px; height: 400px"> </div>
     
     
+=======
+        <div id="content" style='display:none'>
+            <p>A PDF in all its glory!</p>
+        </div>
+
+        <div align="center" </div>
+        <div id="model" style="width: 400px; height: 400px"> </div>
+        <button class="button" onclick="generatePdf()">Export to PDF</button>
+>>>>>>> b425be5bb187bc4f15666302178259f06bdec6a9
 
         <!-- JavaScript modules being used  -->
         <script src="/client/scripts/three.min.js"></script>
-        <script src="/client/scripts/STLLoader.js"></script>
         <script src="/client/scripts/OrbitControls.js"></script>
-        <script src="/client/scripts/STLViewerHTML5.js"></script>
+        <script src="/client/scripts/stlLoader.js"></script>
+        <script src="/client/scripts/stlModelViewer.js"></script>
+        <script src="/client/scripts/stlInfoViewer.js"></script>
+        <script src="/client/scripts/processStl.js"></script>
         <script src="/client/scripts/calculations.js"></script>
+        <script src="/client/scripts/generatePdf.js"></script>
         
         <!-- Latest compiled and minified JavaScript -->
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<<<<<<< HEAD
 
 </body>
+=======
+    </body>
+>>>>>>> b425be5bb187bc4f15666302178259f06bdec6a9
 
     <!-- Footer  -->
-    <div>
-        <footer>
-            <p> @ OPT Industries. All rights reserved.</p>
-        </footer>
-    </div>
+    <footer>
+        <p> @ OPT Industries. All rights reserved.</p>
+    </footer>
 
 </html>

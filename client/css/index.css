@@ -32,7 +32,7 @@ body {
   background-color: #000000;
   background-repeat: no-repeat;
   background-size: auto;
-  line-height: 1;
+  line-height: 1.5;
 }
 
 div.main {
@@ -114,19 +114,10 @@ div.pdf-button {
   width: 100%;
   padding: 0px 10px 0px 10px;
   margin-bottom: 10px;
-  background: linear-gradient(to right, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, .25) 6.25%, rgba(0, 0, 0, .5) 12.5%, rgba(0, 0, 0, .75) 25%, rgba(0, 0, 0, .75) 50%, rgba(0, 0, 0, .75) 75%, rgba(0, 0, 0, .5) 87.5%, rgba(0, 0, 0, .25) 93.75%, rgba(0, 0, 0, 0) 100%);}
-
-#info_display::before,
-#info_display::after,
-#display_options::before,
-#display_options::after {
-    content: '';
-    position: relative;
-    left: 0;
-    width: 100%;
-    height: 20px;
-    background: linear-gradient(to right, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, .25) 6.25%, rgba(0, 0, 0, .5) 12.5%, rgba(0, 0, 0, .75) 25%, rgba(0, 0, 0, .75) 50%, rgba(0, 0, 0, .75) 75%, rgba(0, 0, 0, .5) 87.5%, rgba(0, 0, 0, .25) 93.75%, rgba(0, 0, 0, 0) 100%);    display: inline-block;
-  }
+  background: linear-gradient(to right, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, .3) 6.25%, rgba(0, 0, 0, .6) 12.5%, rgba(0, 0, 0, .8) 25%, rgba(0, 0, 0, .8) 75%, rgba(0, 0, 0, .6) 87.5%, rgba(0, 0, 0, .3) 93.75%, rgba(0, 0, 0, 0) 100%);
+  border-top: solid gray;
+  border-bottom: solid gray;
+}
 
 .cinfo table {width:100%;}
 .cinfo tr {text-align:left;vertical-align:top;}

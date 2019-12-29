@@ -1,4 +1,4 @@
-function processStl() {
+function GenerateStl() {
     var file = document.getElementById("uploadInput").files[0]
     var reader = new FileReader();
 

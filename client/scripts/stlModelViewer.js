@@ -37,7 +37,7 @@ function stlModelViewer(geometry, elementID) {
       var material = new THREE.MeshPhongMaterial({ opacity: geometry.alpha, vertexColors: THREE.VertexColors });
     }
     else { 
-      // Provides a default color as well as a metallic material to simulate natural reflection of light
+      // Provides a default color and a metallic material to simulate a more natural reflection of light
       var material = new THREE.MeshStandardMaterial();
     }
     //NOTE: THREE.DoubleSide not supported in Internet Explorer
@@ -54,6 +54,7 @@ function stlModelViewer(geometry, elementID) {
     bbox.getSize(middle);
     console.log("Dimensions of Model's Bounding-Box: " + JSON.stringify(middle));
 
+    // Move functionality to stlInfoViewer & work-in a conditional so this can be turned off
     scene.add(visualBbox);
     geometry.center();
 

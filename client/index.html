@@ -164,22 +164,30 @@
                             <div id="info_display" class="cinfo"> <!--replace id if necessary, or just get rid of it-->
                                 <span style="color:rgb(197, 197, 197); font-size: 20px; font-weight: bold">Model Printing Options</span>
                                 <table>
-
                                     <tr style="vertical-align:bottom;">
-                                        <th>Resin Type:  </th>
-                                        <td id="ifilename"></td> <!--replace-->
+                                        <th>Resin Type:   <!--getting rid of form tag here and after the select got rid of a line--> 
+                                            <td>                                   
+                                                <select id="resin" style="width: 150px;">
+                                                    <option value="pcLightgrey">$59.90 PrimaCreator Value UV/DLP Resin - Lightgrey</option>
+                                                    <option value="pcTRed">$69.98 PrimaCreator Value UV/DLP Resin - Transparent-Red</option>
+                                                    <option value="pc3D">$76.90 Photocentric3D UV DLP Firm Resin - Grey</option>
+                                                    <option value="bcBlue">$138.69 BlueCast Original DLP Resin - Blue</option>
+                                                    <option value="bcX5">$142.99 BlueCast x5 Resin</option>
+                                                    <option value="zrsgr">$345.99 Zortrax Raydent Surgical Guide Resin</option>
+                                                </select>
+                                            </td>   
+                                        </th> 
                                     </tr>
-
                                     <tr>
                                         <th>Printing Speed: </th>
                                         <td>
-                                            <label>
-                                                <input type="radio" id="rmm" value="0" checked /> Supah Fast <!--replace-->
-                                            </label>
-                                            <label>
-                                                <input type="radio" id="rin" value="1" /> Hecka Slow <!--replace-->
-                                            </label>
-                                            <br>
+                                            <input id="printSpeed" type="range" min="0.1" max="0.4" step="0.1" list="steplist">
+                                            <datalist id="steplist">
+                                                <option value="0.1" label="0.1">0.1</option>
+                                                <option value="0.2" label="0.1">0.2</option>
+                                                <option value="0.3" label="0.1">0.3</option>
+                                                <option value="0.4" label="0.1">0.4</option>
+                                            </datalist>
                                         </td>
                                     </tr>
 

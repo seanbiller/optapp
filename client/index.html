@@ -193,10 +193,10 @@
                                     <span style="color:rgb(197, 197, 197); font-size: 20px; font-weight: bold">Model Printing Options</span>
                                     <table>
                                         <tr style="vertical-align:bottom;">
-                                            <th>Resin Type : </th>
+                                            <th>Resin Type </th>
                                             <td>
-                                                <select id="resin" style="width: 200px;" onchange="calculatePrice(this.value);">
-                                                    <option value="none">none</option>
+                                                <select id="resin" style="width: 200px;" onchange="calculatePrice();">
+                                                    <option value="none">None</option>
                                                     <option value="PCLG" onclick="calculatePrice();">$59.90/Liter PrimaCreator Value UV/DLP Resin - Lightgrey </option>
                                                     <option value="PCTR">$69.98/Liter PrimaCreator Value UV/DLP Resin - Transparent-Red</option>
                                                     <option value="P3D">$76.90/Liter Photocentric3D UV DLP Firm Resin - Grey</option>
@@ -208,7 +208,7 @@
                                         </tr>
 
                                         <tr>
-                                            <th>Printing Speed: </th>
+                                            <th>Printing Speed </th>
                                             <td>
                                                 <label>
                                                     <input type="radio" id="rmm" value="0" checked /> Supah Fast <!--replace-->
@@ -223,16 +223,15 @@
                                     </table>
                                 </div>
                                 <div id="display_options" class="cinfo"> <!--replace id if necessary, or just get rid of it-->
-                                    <span style="color:rgb(197, 197, 197); font-size: 20px; font-weight: bold">Calculated Cost</span>
+                                    <span style="color:rgb(197, 197, 197); font-size: 20px; font-weight: bold">Total Cost</span>
                                     <br>
-                                    <table>
-
+                                    <div id="total_cost" class="center"></div>
+                                    <!-- <table>
                                         <tr>
-                                            <th>Total = </th>
+                                            <th>Total Cost = </th>
                                             <td id='total_cost'></td>
                                         </tr>					
-
-                                    </table>
+                                    </table> -->
                                 </div>
                             </div>      
                         </div>

@@ -1,4 +1,5 @@
 var geo = null;
+var volume = null;
 var mesh = null;
 var mesh_color = null;
 var controls = null;
@@ -92,10 +93,12 @@ function stlModelViewer(geometry, elementID) {
 
   /*******************************************************************************/
   /**Assigns calculated model data, such as volume, to html elements for display**/
-  
+  geo=geometry;
+
   $id("model_bbox").innerHTML = x + " x " + y + " x " + z; // Displays the model's bounding box dimensions
-  let volume = getVolume(geometry).toFixed(2);
+  volume = getVolume().toFixed(2);
   $id("model_volume").innerHTML = volume; // Displays the model's volume
+ 
 
   /*******************************************************************************/
   /*******************************************************************************/
@@ -201,4 +204,36 @@ function getVolume() {
 
 function signedVolumeOfTriangle(p1, p2, p3) {
   return p1.dot(p2.cross(p3)) / 6.0;
+}
+
+function calculatePrice() {
+    var x = document.getElementById('resin').value;
+    var vl = volume;
+    switch (x)
+    {
+      case 'PCLG':
+        var price = 59.90 * (vl/1000000);
+        document.getElementById('total_cost').innerHTML = '$' + price.toFixed(2) + ' USD';
+        break;
+      case 'PCTR':
+        var price = 69.98 * (vl/1000000);
+        document.getElementById('total_cost').innerHTML = '$' + price.toFixed(2) + ' USD';
+        break;
+      case 'P3D':
+        var price = 76.90 * (vl/1000000);
+        document.getElementById('total_cost').innerHTML = '$' + price.toFixed(2) + ' USD';
+        break;
+      case 'BCO':
+        var price = 138.69 * (vl/1000000);
+        document.getElementById('total_cost').innerHTML = '$' + price.toFixed(2) + ' USD';
+        break;
+      case 'BCx5':
+        var price = 142.99 * (vl/1000000);
+        document.getElementById('total_cost').innerHTML = '$' + price.toFixed(2) + ' USD';
+        break;
+      case 'ZRS':
+        var price = 345.99 * (vl/1000000);
+        document.getElementById('total_cost').innerHTML = '$' + price.toFixed(2) + ' USD';
+        break;
+    }
 }

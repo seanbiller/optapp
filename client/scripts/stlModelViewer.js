@@ -208,32 +208,26 @@ function signedVolumeOfTriangle(p1, p2, p3) {
 
 function calculatePrice() {
     var x = document.getElementById('resin').value;
-    var vl = volume;
-    switch (x)
-    {
+    let inLiters = volume/1000000 //convert to Liters
+    switch(x) {
       case 'PCLG':
-        var price = 59.90 * (vl/1000000);
-        document.getElementById('total_cost').innerHTML = '$' + price.toFixed(2) + ' USD';
+        var price = 59.90 * inLiters;
         break;
       case 'PCTR':
-        var price = 69.98 * (vl/1000000);
-        document.getElementById('total_cost').innerHTML = '$' + price.toFixed(2) + ' USD';
+        var price = 69.98 * inLiters;
         break;
       case 'P3D':
-        var price = 76.90 * (vl/1000000);
-        document.getElementById('total_cost').innerHTML = '$' + price.toFixed(2) + ' USD';
+        var price = 76.90 * inLiters;
         break;
       case 'BCO':
-        var price = 138.69 * (vl/1000000);
-        document.getElementById('total_cost').innerHTML = '$' + price.toFixed(2) + ' USD';
+        var price = 138.69 * inLiters;
         break;
       case 'BCx5':
-        var price = 142.99 * (vl/1000000);
-        document.getElementById('total_cost').innerHTML = '$' + price.toFixed(2) + ' USD';
+        var price = 142.99 * inLiters;
         break;
       case 'ZRS':
-        var price = 345.99 * (vl/1000000);
-        document.getElementById('total_cost').innerHTML = '$' + price.toFixed(2) + ' USD';
+        var price = 345.99 * inLiters;
         break;
     }
+    document.getElementById('total_cost').innerHTML = '$' + price.toFixed(2) + ' USD';
 }

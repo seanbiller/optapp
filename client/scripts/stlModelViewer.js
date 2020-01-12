@@ -1,79 +1,204 @@
+var geo = null;
+var mesh = null;
+var mesh_color = null;
+var controls = null;
+var visualBbox = null;
+var middle = null;
+var axesHelper = null;
+
 function stlModelViewer(geometry, elementID) {
-    var elem = document.getElementById(elementID)
+  var elem = document.getElementById(elementID)
+  var camera = new THREE.PerspectiveCamera(55, elem.clientWidth / elem.clientHeight, .01, 10000);
 
-    var camera = new THREE.PerspectiveCamera(55, elem.clientWidth / elem.clientHeight, .01, 10000);
+  var renderer = new THREE.WebGLRenderer({
+    antialias: true,
+    alpha: true
+  });
+  renderer.setSize(elem.clientWidth, elem.clientHeight);
+  elem.appendChild(renderer.domElement);
 
-    var renderer = new THREE.WebGLRenderer({
-      antialias: true,
-      alpha: true
-    });
+  window.addEventListener('resize', function () {
     renderer.setSize(elem.clientWidth, elem.clientHeight);
-    elem.appendChild(renderer.domElement);
+    camera.aspect = elem.clientWidth / elem.clientHeight;
+    camera.updateProjectionMatrix();
+  }, false);
 
-    window.addEventListener('resize', function () {
-      renderer.setSize(elem.clientWidth, elem.clientHeight);
-      camera.aspect = elem.clientWidth / elem.clientHeight;
-      camera.updateProjectionMatrix();
-    }, false);
+  controls = new THREE.OrbitControls(camera, renderer.domElement); // was 'var controls = new THREE.OrbitControls(camera, renderer.domElement);'
+  controls.enableDamping = true;
+  controls.rotateSpeed = 0.5;
+  controls.dampingFactor = 0.1;
+  controls.enableZoom = true;
+  controls.autoRotate = false;
+  controls.autoRotateSpeed = 3.75;
 
-    var controls = new THREE.OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true;
-    controls.rotateSpeed = 0.5;
-    controls.dampingFactor = 0.1;
-    controls.enableZoom = true;
-    controls.autoRotate = true;
-    controls.autoRotateSpeed = 3.75;
+  var scene = new THREE.Scene();
+  scene.add(new THREE.HemisphereLight(0xffffff, 1.5));
+  camera.position.set(0, 0, 0);
+  scene.add(camera);
 
-    var scene = new THREE.Scene();
-    scene.add(new THREE.HemisphereLight(0xffffff, 1.5));
+  geometry.computeVertexNormals()
+  geometry.normalizeNormals()
 
-    camera.position.set(0, 0, 0);
-		scene.add(camera);
-
-    geometry.computeVertexNormals()
-    geometry.normalizeNormals()
-
-    if (geometry.hasColors) {
-      var material = new THREE.MeshPhongMaterial({ opacity: geometry.alpha, vertexColors: THREE.VertexColors });
-    }
-    else { 
-      // Provides a default color and a metallic material to simulate a more natural reflection of light
-      var material = new THREE.MeshStandardMaterial();
-    }
-    //NOTE: THREE.DoubleSide not supported in Internet Explorer
-    material.side = THREE.DoubleSide;
-
-    var mesh = new THREE.Mesh(geometry, material);
-    scene.add(mesh);
-
-    geometry.computeBoundingBox();
-    var bbox = geometry.boundingBox;
-    var visualBbox = new THREE.Box3Helper(bbox, 0xffff00); // Bounding box of model
-    let middle = new THREE.Vector3(geometry.center());
-
-    bbox.getSize(middle);
-    console.log("Dimensions of Model's Bounding-Box: " + JSON.stringify(middle));
-
-    // Move functionality to stlInfoViewer & work-in a conditional so this can be turned off
-    scene.add(visualBbox);
-    geometry.center();
-
-    var largestDimension = Math.max(geometry.boundingBox.max.x,
-      geometry.boundingBox.max.y,
-      geometry.boundingBox.max.z)
-    camera.position.z = largestDimension * 3.5;
-    camera.position.y = largestDimension * 1.5;
-  
-    var pointLight = new THREE.PointLight(0xffffff, 0.3);
-    pointLight.position.x = 0;
-    pointLight.position.y = -25;
-    pointLight.position.z = 10;
-    camera.add(pointLight);	
-
-    var animate = function () {
-      requestAnimationFrame(animate);
-      controls.update();
-      renderer.render(scene, camera);
-    };
-    animate();
+  if (geometry.hasColors) {
+    var material = new THREE.MeshPhongMaterial({ opacity: geometry.alpha, vertexColors: THREE.VertexColors });
   }
+  else { 
+    // Provides a default color and a metallic material to simulate a more natural reflection of light
+    var material = new THREE.MeshStandardMaterial();
+  }
+  //NOTE: THREE.DoubleSide not supported in Internet Explorer
+  material.side = THREE.DoubleSide;
+
+  mesh = new THREE.Mesh(geometry, material);
+  scene.add(mesh);
+
+  /******************************************************************************/
+  /****The following code deals with the bounding box of the rendered model******/
+
+  geometry.computeBoundingBox(); // The model's bounding box data is computed/updated
+  var bbox = geometry.boundingBox; // The computed/updated bounding box data is stored in variable 'bbox'
+  visualBbox = new THREE.Box3Helper(bbox, 0xffff00); // Box3Helper uses bbox's data to create a visual representation of the model's bounding box, set to a default color
+  middle = new THREE.Vector3(geometry.center()); // The point vector located at the model's center is stored in the new Vector3 object 'middle'
+  bbox.getSize(middle); // Using the central point vector for reference, the bounding box's {x,y,z} dimensions are found and saved to 'middle'
+  
+  let x = middle.x.toFixed(1);
+  let y = middle.y.toFixed(1);
+  let z = middle.z.toFixed(1);
+
+  scene.add(visualBbox);
+  visualBbox.visible = false;
+
+  /*******************************************************************************/
+  /*******************************************************************************/
+
+  geometry.center();
+
+  var largestDimension = Math.max(geometry.boundingBox.max.x,
+    geometry.boundingBox.max.y,
+    geometry.boundingBox.max.z)
+  camera.position.z = largestDimension * 3.5;
+  camera.position.y = largestDimension * 1.5;
+
+  // Creates a visual representation of the axes in the viewer for users to reference when viewing their 3D model
+  axesHelper = new THREE.AxesHelper(largestDimension * 1.5);
+  scene.add(axesHelper);
+  axesHelper.visible = false;
+
+  var pointLight = new THREE.PointLight(0xffffff, 0.3);
+  pointLight.position.x = 0;
+  pointLight.position.y = -25;
+  pointLight.position.z = 10;
+  camera.add(pointLight);	
+
+  /*******************************************************************************/
+  /**Assigns calculated model data, such as volume, to html elements for display**/
+  
+  $id("model_bbox").innerHTML = x + " x " + y + " x " + z; // Displays the model's bounding box dimensions
+  let volume = getVolume(geometry).toFixed(2);
+  $id("model_volume").innerHTML = volume; // Displays the model's volume
+
+  /*******************************************************************************/
+  /*******************************************************************************/
+
+  var animate = function () {
+    requestAnimationFrame(animate);
+    controls.update();
+    renderer.render(scene, camera);
+  };
+  animate();
+}
+
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
+
+function $id(id) {
+  return document.getElementById(id);
+}
+
+function setAutoRotation(choice) {
+  if (choice == true) { controls.autoRotate = true; }
+  else { controls.autoRotate = false; }
+  controls.update();
+}
+
+// Toggles the visibility for the x, y, and z axes on the canvas in which the model is rendered
+function displayAxes(choice) {
+  if (choice == true) { axesHelper.visible = true; }
+  else { axesHelper.visible = false; }
+}
+
+function displayModelBbox(choice) {
+  if (choice == true) { visualBbox.visible = true; }
+  else { visualBbox.visible = false; }
+}
+
+function set_color(o, o_color, is_bg_color) { // unsure what lines 124 - 133 are for
+  is_bg_color=is_bg_color||false;
+  
+  if (is_bg_color) {
+    bg_color=o_color;
+    if (o_color=='transparent') { renderer.setClearColor(0x000000, 0); }
+    else { renderer.setClearColor(o_color, 1); }
+    return;
+  }
+  
+  c = $id('cpal').getElementsByTagName("div");
+  var i=c.length;	// i=length of the array of div elements that are children of the element with id='cpal'
+
+  while(i--) {
+      // if the div at this location in the array is equal to 'o' 
+      // (the current div, entered into the function's parameter as 'this'),
+      // style the div's border with a thin dark-green line 
+      // (lets us know which color we selected).
+      if (c[i]==o) { c[i].style.border="2px solid #012101"; }
+      else { c[i].style.border="2px solid transparent"; }
+  }
+  mesh_color=o_color; // was 'var mesh_color=0_color;'
+  update_mesh_color();
+}
+
+function update_mesh_color() {
+  if (mesh==null) return;
+  mesh.material.color.set(parseInt(mesh_color.substr(1),16));
+}
+
+// Calculates the volume of the model being rendered
+function getVolume() {
+  if (!geo.isBufferGeometry) {
+    console.log("'geometry' must be an indexed or non-indexed buffer geometry");
+    return 0;
+  }
+
+  var isIndexed = geo.index !== null;
+  let position = geo.attributes.position;
+  let sum = 0;
+  let p1 = new THREE.Vector3(),
+    p2 = new THREE.Vector3(),
+    p3 = new THREE.Vector3();
+  
+  if (!isIndexed) {
+    let faces = position.count / 3;
+    for (let i = 0; i < faces; i++) {
+      p1.fromBufferAttribute(position, i * 3 + 0);
+      p2.fromBufferAttribute(position, i * 3 + 1);
+      p3.fromBufferAttribute(position, i * 3 + 2);
+      sum += signedVolumeOfTriangle(p1, p2, p3);
+    }
+  }
+  else {
+    let index = geo.index;
+    let faces = index.count / 3;
+    for (let i = 0; i < faces; i++){
+      p1.fromBufferAttribute(position, index.array[i * 3 + 0]);
+      p2.fromBufferAttribute(position, index.array[i * 3 + 1]);
+      p3.fromBufferAttribute(position, index.array[i * 3 + 2]);
+      sum += signedVolumeOfTriangle(p1, p2, p3);
+    }
+  }
+  return sum;
+}
+
+function signedVolumeOfTriangle(p1, p2, p3) {
+  return p1.dot(p2.cross(p3)) / 6.0;
+}

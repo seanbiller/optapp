@@ -12,6 +12,8 @@
         <!-- JsPdf CDN for creating PDF of Page -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
         <script>
+            var geometry = null;
+
             function generateStl() {
                 var file = document.getElementById("uploadInput").files[0]
                 var reader = new FileReader();
@@ -37,13 +39,9 @@
                     * to move on to generating our scene.
                     */
 
-                    let geometry = loader.parse(contents);
+                    geometry = loader.parse(contents);
 
                     stlModelViewer(geometry, "model");
-                    //stlInfoViewer(geometry, "info");
-
-                    // let vol = getVolume(geometry);
-                    // console.log("Part Volume: " + vol.toFixed(2)+ " mm^3");
                 }
                 // read the file using the reader, triggering the 'onload' function declared above
                 if (reader.readAsBinaryString !== undefined) { reader.readAsBinaryString(file); } 
@@ -67,143 +65,170 @@
         <!-- End of OPT logo html -->
 
         <div class="main">
-            <form name="uploadForm">
-                <input id="uploadInput" type="file" name="myFiles" onchange="generateStl();">
-            </form>
-
-            <div class="center">
-                <!-- <div id="model" class="model_panel"> </div> -->
-                <div id="info" class="info_panel"> 
-                    <div style="width: 100%; height: 100%;">
-                        <div class="vertical-center">
-                            <div id="info_display" class="cinfo">
-                                <span style="color:rgb(197, 197, 197); font-size: 20px; font-weight: bold">Model info</span>
-                                <table>
-
-                                    <tr style="vertical-align:bottom;">
-                                        <th>File Name </th>
-                                        <td id="ifilename"></td>
-                                    </tr>
-
-                                    <tr>
-                                        <th>Measuring Unit</th>
-                                        <td>
-                                            <label>
-                                                <input type="radio" id="rmm" onclick="set_file_units(1);" name="runits" value="0" checked /> mm
-                                            </label>
-                                            <label>
-                                                <input type="radio" id="rin" onclick="set_file_units(2);" name="runits" value="1" /> in
-                                            </label>
-                                            <br>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr style="vertical-align:bottom;">
-                                        <th>B-Box Dimensions: </th>
-                                        <td id="isize" style="width:50%;"></td>
-                                    </tr>
-
-                                    <tr>
-                                        <th>Volume (<span id="vunits">mm</span><sup>3</sup>):</th>
-                                        <td id="ivol" style="text-align: left;"></td>
-                                        <br>
-                                    </tr>
-
-                                    <tr>
-                                        <th>Triangle Count: </th>
-                                        <td id="itriangles" style="text-align:left;"></td>
-                                        <br>
-                                    </tr>
-
-                                </table>
-                            </div>
-                            <div id="display_options" class="cinfo">
-                                <span style="color:rgb(197, 197, 197); font-size: 20px; font-weight: bold">Display Options</span>
-                                <br>
-                                <table>
-
-                                    <tr>
-                                        <th>Auto-Rotation</th>
-                                        <td>
-                                            <label>
-                                                <input type="radio" id="rrotate1" onclick="controls.autoRotate=true;" name="rrotate" value="0" checked /> On
-                                            </label>
-                                            <label>
-                                                <input type="radio" id="rrotate2" onclick="controls.autoRotate=false;" name="rrotate" value="1" /> Off
-                                            </label>
-                                        </td>
-                                    </tr>
-
-                                    <tr>
-                                        <th>Color</th>
-                                        <td id="cpal">
-                                            <div class="cbar" id="black_color" onclick="set_color(this,'#000000');" style="background:#000000;"></div>
-                                            <div class="cbar" id="white_color" onclick="set_color(this,'#FFFFFF');" style="background:#FFFFFF;"></div>
-                                            <div class="cbar" id="blue_color" onclick="set_color(this,'#0000FF');" style="background:#0000FF;"></div>
-                                            <div class="cbar" id="green_color" onclick="set_color(this,'#00FF00');" style="background:#00FF00;"></div>
-                                            <div class="cbar" id="red_color" onclick="set_color(this,'#FF0000');" style="background:#FF0000;"></div>
-                                            <div class="cbar" id="yellow_color" onclick="set_color(this,'#FFFF00');" style="background:#FFFF00;"></div>
-                                            <div class="cbar" id="gray_color" onclick="set_color(this,'#909090');" style="background:#909090;border:2px solid #012101;"></div>
-                                            <div class="cbar" id="azure_color" onclick="set_color(this,'#00FFFF');" style="background:#00FFFF;"></div>
-                                            <div class="cbar" id="pink_color" onclick="set_color(this,'#FF00FF');" style="background:#FF00FF;"></div>
-                                            <div class="cbar" id="purple_color" onclick="set_color(this,'#703487');" style="background:#703487;"></div>
-                                            <div class="cbar" id="darkblue_color" onclick="set_color(this,'#102075');" style="background:#102075;"></div>
-                                            <div class="cbar" id="brown_color" onclick="set_color(this,'#654321');" style="background:#654321;"></div>                
-                                        </td>
-                                    </tr>						
-
-                                </table>
-                            </div>
-                        </div>      
-                    </div>
+            <div class="button-container">
+                <div class="button_panel">
+                    <label class="custom-btn-overlay">
+                        <input id="uploadInput" type="file" name="myFiles" onchange="generateStl();">Choose .stl File
+                    </label>
                 </div>
-                <div id="model" class="model_panel"> </div>
-                <div id="info" class="info_panel"> 
-                    <div style="width: 100%; height: 100%;">
-                        <div class="vertical-center">
-                            <div id="info_display" class="cinfo"> <!--replace id if necessary, or just get rid of it-->
-                                <span style="color:rgb(197, 197, 197); font-size: 20px; font-weight: bold">Model Printing Options</span>
-                                <table>
-
-                                    <tr style="vertical-align:bottom;">
-                                        <th>Resin Type:  </th>
-                                        <td id="ifilename"></td> <!--replace-->
-                                    </tr>
-
-                                    <tr>
-                                        <th>Printing Speed: </th>
-                                        <td>
-                                            <label>
-                                                <input type="radio" id="rmm" value="0" checked /> Supah Fast <!--replace-->
-                                            </label>
-                                            <label>
-                                                <input type="radio" id="rin" value="1" /> Hecka Slow <!--replace-->
-                                            </label>
-                                            <br>
-                                        </td>
-                                    </tr>
-
-                                </table>
-                            </div>
-                            <div id="display_options" class="cinfo"> <!--replace id if necessary, or just get rid of it-->
-                                <span style="color:rgb(197, 197, 197); font-size: 20px; font-weight: bold">Calculated Cost</span>
-                                <br>
-                                <table>
-
-                                    <tr>
-                                        <th>Total = </th>
-                                        <td id='total_cost'></td>
-                                    </tr>					
-
-                                </table>
-                            </div>
-                        </div>      
-                    </div>
+                <div class="button_panel">
+                    <label class="custom-btn-overlay">Export to PDF
+                        <button onclick="generatePdf()"></button>
+                    </label>
                 </div>
             </div>
 
-            <div class="pdf-button">
-                <button onclick="generatePdf()">Export to PDF</button>
+            <div class="center">
+                <div style="width: 28%; height: 100%; display: inline-block; padding: 10px;">
+                    <div id="info" class="display_panel"> 
+                            <div style="width: 100%; height: 100%;">
+                                <div class="vertical-center">
+                                    <div id="info_display" class="cinfo">
+                                        <span style="color:rgb(197, 197, 197); font-size: 20px; font-weight: bold">Model Info</span>
+                                        <table>
+                                            
+                                            <tr style="vertical-align:bottom;">
+                                                <th>File Name </th>
+                                                <td id="ifilename"></td>
+                                            </tr>
+        
+                                            <tr>
+                                                <th>Measuring Unit</th>
+                                                <td>
+                                                    <label>
+                                                        <input type="radio" id="rmm" onclick="set_file_units(1);" name="runits" value="0" checked /> mm
+                                                    </label>
+                                                    <label>
+                                                        <input type="radio" id="rin" onclick="set_file_units(2);" name="runits" value="1" /> in
+                                                    </label>
+                                                    <br>
+                                                </td>
+                                            </tr>
+                                            
+                                            <tr style="vertical-align:bottom;">
+                                                <th>Bounding Box Size: </th>
+                                                <td id="model_bbox" style="width:50%;"></td> <!--Computed and added to this data cell on lines 59-71 of stlModelViewer.js-->
+                                            </tr>
+        
+                                            <tr>
+                                                <th>Volume (<span id="vunits">mm</span><sup>3</sup>):</th>
+                                                <td id="model_volume" style="text-align: left;"></td>
+                                            </tr>
+        
+                                            <tr>
+                                                <th>Triangle Count: </th>
+                                                <td id="itriangles" style="text-align:left;"></td>
+                                            </tr>
+        
+                                        </table>
+                                    </div>
+                                    <div id="display_options" class="cinfo">
+                                        <span style="color:rgb(197, 197, 197); font-size: 20px; font-weight: bold">Display Options</span>
+                                        <br>
+                                        <table>
+        
+                                            <tr>
+                                                <th>Auto-Rotation</th>
+                                                <td>
+                                                    <label>
+                                                        <input type="radio" onclick="setAutoRotation(true);" name="rotate_option" /> On
+                                                    </label>
+                                                    <label>
+                                                        <input type="radio" onclick="setAutoRotation(false);" name="rotate_option" checked /> Off
+                                                    </label>
+                                                </td>
+                                            </tr>
+        
+                                            <tr>
+                                                <th>Model's Bounding Box</th>
+                                                <td>
+                                                    <label>
+                                                        <input type="radio" onclick="displayModelBbox(true);" name="bbox_option" /> Show
+                                                    </label>
+                                                    <label>
+                                                        <input type="radio" onclick="displayModelBbox(false);" name="bbox_option" checked /> Hide
+                                                    </label>
+                                                </td>
+                                            </tr>
+        
+                                            <tr>
+                                                <th>Axes [ x: R, y: G, z: B ]</th>
+                                                <td>
+                                                    <label>
+                                                        <input type="radio" onclick="displayAxes(true);" name="axes_option" /> Show
+                                                    </label>
+                                                    <label>
+                                                        <input type="radio" onclick="displayAxes(false);" name="axes_option" checked /> Hide
+                                                    </label>
+                                                </td>
+                                            </tr>
+        
+                                            <tr>
+                                                <th>Color</th>
+                                                <td id="cpal" style="width:50%">
+                                                    <div class="cbar" id="black_color" onclick="set_color(this,'#1d1d1d');" style="background:#1d1d1d;"></div>
+                                                    <div class="cbar" id="white_color" onclick="set_color(this,'#FFFFFF');" style="background:#FFFFFF;"></div>                                                    
+                                                    <div class="cbar" id="green_color" onclick="set_color(this,'#027902');" style="background:#027902;"></div>
+                                                    <div class="cbar" id="red_color" onclick="set_color(this,'#970000');" style="background:#970000;"></div>                                                    
+                                                    <div class="cbar" id="gray_color" onclick="set_color(this,'#909090');" style="background:#909090;"></div>                                                    
+                                                    <div class="cbar" id="darkblue_color" onclick="set_color(this,'#1128a0');" style="background:#1128a0;"></div>
+                                                    <div class="cbar" id="brown_color" onclick="set_color(this,'#654321');" style="background:#654321;"></div>                
+                                                </td>
+                                            </tr>						
+        
+                                        </table>
+                                    </div>
+                                </div>      
+                            </div>
+                    </div>
+                </div>
+                <div style="width: 38%; height: 100%; display: inline-block; padding: 10px;">
+                    <div id="model" class="display_panel"></div>
+                </div>
+                <div style="width: 28%; height: 100%; display: inline-block; padding: 10px;">
+                    <div id="info" class="display_panel"> 
+                        <div style="width: 100%; height: 100%;">
+                            <div class="vertical-center">
+                                <div id="info_display" class="cinfo"> <!--replace id if necessary, or just get rid of it-->
+                                    <span style="color:rgb(197, 197, 197); font-size: 20px; font-weight: bold">Model Printing Options</span>
+                                    <table>
+
+                                        <tr style="vertical-align:bottom;">
+                                            <th>Resin Type:  </th>
+                                            <td id="ifilename"></td> <!--replace-->
+                                        </tr>
+
+                                        <tr>
+                                            <th>Printing Speed: </th>
+                                            <td>
+                                                <label>
+                                                    <input type="radio" id="rmm" value="0" checked /> Supah Fast <!--replace-->
+                                                </label>
+                                                <label>
+                                                    <input type="radio" id="rin" value="1" /> Hecka Slow <!--replace-->
+                                                </label>
+                                                <br>
+                                            </td>
+                                        </tr>
+
+                                    </table>
+                                </div>
+                                <div id="display_options" class="cinfo"> <!--replace id if necessary, or just get rid of it-->
+                                    <span style="color:rgb(197, 197, 197); font-size: 20px; font-weight: bold">Calculated Cost</span>
+                                    <br>
+                                    <table>
+
+                                        <tr>
+                                            <th>Total = </th>
+                                            <td id='total_cost'></td>
+                                        </tr>					
+
+                                    </table>
+                                </div>
+                            </div>      
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 

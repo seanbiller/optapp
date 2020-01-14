@@ -134,17 +134,11 @@ THREE.STLLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype
 		}
 
 		function matchDataViewAt( query, reader, offset ) {
-
 			// Check if each byte in query matches the corresponding byte from the current offset
-
 			for ( var i = 0, il = query.length; i < il; i ++ ) {
-
 				if ( query[ i ] !== reader.getUint8( offset + i, false ) ) return false;
-
 			}
-
 			return true;
-
 		}
 
 		function parseBinary( data ) {

@@ -97,7 +97,7 @@ function stlModelViewer(geometry, elementID) {
 
   $id("model_bbox").innerHTML = x + " x " + y + " x " + z; // Displays the model's bounding box dimensions
   volume = getVolume().toFixed(2);
-  $id("model_volume").innerHTML = volume; // Displays the model's volume
+  $id("model_volume").innerHTML = numberWithCommas(volume); // Displays the model's volume
  
 
   /*******************************************************************************/
@@ -225,5 +225,11 @@ function calculatePrice() {
         var price = 345.99 * inLiters;
         break;
     }
-    document.getElementById('total_cost').innerHTML = '$' + price.toFixed(2) + ' USD';
+    document.getElementById('total_cost').innerHTML = '$' + numberWithCommas(price.toFixed(2)) + ' USD';
+}
+
+function numberWithCommas(x) {
+  var parts = x.toString().split(".");
+  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  return parts.join(".");
 }

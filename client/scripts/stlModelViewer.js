@@ -1,11 +1,11 @@
-var geo = null;
-var volume = null;
-var mesh = null;
-var mesh_color = null;
-var controls = null;
-var visualBbox = null;
-var middle = null;
-var axesHelper = null;
+let geo = null;
+let volume = null;
+let mesh = null;
+let mesh_color = null;
+let controls = null;
+let visualBbox = null;
+let middle = null;
+let axesHelper = null;
 
 function stlModelViewer(geometry, elementID) {
   var elem = document.getElementById(elementID)
@@ -93,7 +93,7 @@ function stlModelViewer(geometry, elementID) {
 
   /*******************************************************************************/
   /**Assigns calculated model data, such as volume, to html elements for display**/
-  geo=geometry;
+  geo = geometry;
 
   $id("model_bbox").innerHTML = x + " x " + y + " x " + z; // Displays the model's bounding box dimensions
   volume = getVolume().toFixed(2);
@@ -110,10 +110,6 @@ function stlModelViewer(geometry, elementID) {
   };
   animate();
 }
-
-/*******************************************************************************/
-/*******************************************************************************/
-/*******************************************************************************/
 
 function $id(id) {
   return document.getElementById(id);
@@ -136,7 +132,7 @@ function displayModelBbox(choice) {
   else { visualBbox.visible = false; }
 }
 
-function set_color(o, o_color, is_bg_color) { // unsure what lines 124 - 133 are for
+function set_color(o, o_color, is_bg_color) { // unsure what lines 140 - 150 are for
   is_bg_color=is_bg_color||false;
   
   if (is_bg_color) {

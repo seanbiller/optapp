@@ -44,7 +44,7 @@
                     let geometry = loader.parse(contents);
 
                     document.getElementById('stl_filename').innerHTML = file_name + '';
-                    document.getElementById('num_triangles').innerHTML = getTriangleCount() + '';
+                    document.getElementById('num_triangles').innerHTML = numberWithCommas(getTriangleCount());
 
                     stlModelViewer(geometry, "model");
                 }

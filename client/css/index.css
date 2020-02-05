@@ -69,6 +69,15 @@ div.center {
   height: 475px;
 }
 
+div.button-container {
+  color: #ccc;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  padding: 10px 15px;
+}
+
 .button_panel {
   display: inline-block;
   position: relative;
@@ -79,38 +88,101 @@ div.center {
 input[type="file"] {
   display: none;
 }
+
+input[type="radio"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+
+  border: 2px solid #999;
+  transition: 0.2s all linear;
+  margin-right: 5px;
+
+  position: relative;
+  top: 4px;
+}
+
+input[type="radio"]:checked {
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  border: 6px solid white;
+}
+
+input[type="radio"]:focus {
+  outline: none;
+}
+
 button {
   display: none;
 }
+
 .custom-btn-overlay {
-  border: 2px solid #ccc;
+  border: 1px solid rgba(204, 204, 204);
+  border-radius: 4px;
+  background-color: none;
   display: inline-block;
-  padding: 6px 12px;
+  text-align: center;
+  padding-right: 5px;
+  padding-left: 5px;
+  transition: all 0.5s;
   cursor: pointer;
 }
 
-div.button-container {
+.custom-btn-overlay span:before {
+  content: '[';
   color: white;
+  font-size: 20px;
   position: relative;
-  width: 100%;
-  height: 100%;
-  text-align: center;
-  padding: 10px 15px;
+  opacity: 0;
+  top: 0;
+  left: -5px;
+  transition: 0.5s;
+}
+
+.custom-btn-overlay span:after {
+  /* content: '\00bb'; */
+  content: ']';
+  color: white;
+  font-size: 20px;
+  position: relative;
+  opacity: 0;
+  top: 0;
+  right: -5px;
+  transition: 0.5s;
+}
+
+.custom-btn-overlay:hover {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.custom-btn-overlay:hover span:before {
+  opacity: 1;
+  left: 0;
+}
+
+.custom-btn-overlay:hover span:after {
+  opacity: 1;
+  right: 0;
 }
 
 .cinfo {
   width: 100%;
   padding: 0px 10px 0px 10px;
   margin-bottom: 10px;
-  background: linear-gradient(to right, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, .3) 6.25%, rgba(0, 0, 0, .6) 12.5%, rgba(0, 0, 0, .8) 25%, rgba(0, 0, 0, .8) 75%, rgba(0, 0, 0, .6) 87.5%, rgba(0, 0, 0, .3) 93.75%, rgba(0, 0, 0, 0) 100%);
-  border-top: solid gray;
-  border-bottom: solid gray;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, .3) 3.75%, rgba(0, 0, 0, .6) 7.5%, rgba(0, 0, 0, .8) 15%, rgba(0, 0, 0, .8) 85%, rgba(0, 0, 0, .6) 92.5%, rgba(0, 0, 0, .3) 96.25%, rgba(0, 0, 0, 0) 100%);
+  border-top: solid grey;
+  border-bottom: solid grey;
 }
 
 .cinfo table {width:100%;}
 .cinfo tr {text-align:left;vertical-align:top;}
-.cinfo tr td {padding-top: 10px;}
-.cinfo tr th {font-weight: normal;padding-top: 10px;}
+.cinfo tr td {padding-top: 5px; padding-bottom: 5px; font-size: 1vw;}
+.cinfo tr th {font-weight: normal; padding-top: 5px; padding-bottom: 5px;}
 
 .cbar {
   width: 20px;

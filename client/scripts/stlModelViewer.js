@@ -33,7 +33,6 @@ function stlModelViewer(geometry, elementID) {
   controls.autoRotateSpeed = 3.75;
 
   var scene = new THREE.Scene();
-  scene.add(new THREE.HemisphereLight(0xffffff, 1.5));
   camera.position.set(0, 0, 0);
   scene.add(camera);
 
@@ -85,11 +84,11 @@ function stlModelViewer(geometry, elementID) {
   scene.add(axesHelper);
   axesHelper.visible = false;
 
-  var pointLight = new THREE.PointLight(0xffffff, 0.3);
-  pointLight.position.x = 0;
-  pointLight.position.y = -25;
-  pointLight.position.z = 10;
-  camera.add(pointLight);	
+  scene.add(new THREE.HemisphereLight(0xffffff, 2.5));
+
+  var pointLight = new THREE.PointLight(0xffffff, 0.3); // 0xffffff
+  pointLight.position.set(0, -25, 10);
+  camera.add(pointLight); // look into differences between adding lights to camera v.s. scene
 
   /*******************************************************************************/
   /**Assigns calculated model data, such as volume, to html elements for display**/

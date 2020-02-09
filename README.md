@@ -1,2 +1,2 @@
 # optApp
-This is App is being built for the fall WSU 2019 coding bootcamp group JannicksFavgroup
+Web application for customers of OPT’s Material Lab to upload and view a 3D model in .stl format with Three.js and calculate the cost to print it. 

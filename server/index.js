@@ -1,4 +1,3 @@
-require('dotenv').config()
 const express = require('express')
 const fileUpload = require('express-fileupload')
 const NodeStl = require('node-stl')
@@ -36,7 +35,13 @@ app.post('/model-info', (request, response) => {
   response.send(stlData)
 })
 
-app.listen(1337, () => { console.log('Listening on port 1337') })
+process.env.PORT || 1337;
+
+const port = process.env.PORT || 1337;
+
+app.listen(port, function() {
+  console.log('Our app is running on http://localhost:' + port);
+});
 
 
 module.exports = app

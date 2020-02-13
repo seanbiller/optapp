@@ -15,8 +15,9 @@ function stlModelViewer(geometry, elementID) {
     antialias: true,
     alpha: true
   });
+
   renderer.setSize(elem.clientWidth, elem.clientHeight);
-  elem.appendChild(renderer.domElement);
+  elem.appendChild(renderer.domElement, elem.childNodes[0]);
 
   window.addEventListener('resize', function () {
     renderer.setSize(elem.clientWidth, elem.clientHeight);
@@ -24,7 +25,7 @@ function stlModelViewer(geometry, elementID) {
     camera.updateProjectionMatrix();
   }, false);
 
-  controls = new THREE.OrbitControls(camera, renderer.domElement); // was 'var controls = new THREE.OrbitControls(camera, renderer.domElement);'
+  controls = new THREE.OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
   controls.rotateSpeed = 0.5;
   controls.dampingFactor = 0.1;
@@ -120,7 +121,7 @@ function setAutoRotation(choice) {
   controls.update();
 }
 
-// Toggles the visibility for the x, y, and z axes on the canvas in which the model is rendered
+// Toggles the visibility for the x, y, and z axes on the canvas where the model is rendered
 function displayAxes(choice) {
   if (choice == true) { axesHelper.visible = true; }
   else { axesHelper.visible = false; }
@@ -205,6 +206,9 @@ function calculatePrice() {
     var x = document.getElementById('resin').value;
     let inLiters = volume/1000000 //convert to Liters
     switch(x) {
+      case 'none':
+        var price = 0;
+        break;
       case 'PCLG':
         var price = 59.90 * inLiters;
         break;
@@ -231,4 +235,18 @@ function numberWithCommas(x) {
   var parts = x.toString().split(".");
   parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   return parts.join(".");
+}
+
+// Getting values for printing time
+function set_printing_time(z) {
+    var p = view_units == 2 ? 0:0;
+    var slider = document.getElementById("time");
+    var output = document.getElementById("ispeed");
+    var output1 = document.getElementById("itime");
+    output1.innerHTML = (slider.value/10) * numberWithCommas(z.toFixed(p)) + " seconds";
+    output.innerHTML = (slider.value/10) + " mm/sec";
+    slider.oninput = function() {
+        output1.innerHTML = (this.value/10) * numberWithCommas(z.toFixed(p)) + " seconds";
+        output.innerHTML = (this.value/10) + " mm/sec";
+    }
 }

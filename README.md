@@ -1,2 +1,2 @@
-# optApp
-Web application for customers of OPT’s Material Lab to upload and view a 3D model in .stl format with Three.js and calculate the cost to print it. 
+# OPTapp
+A web application built for OPT Industries' Material Lab where customers can upload and view a 3D render of an .stl file and calculate the cost to print it based on the model's volume and the customer's choice of printing material and speed. 

@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "./node_modules/.bin/nodemon ./server/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "circleciTest": "testcafe chrome:headless tests/**/* -r xunit:/tmp/test-results/res.xml",
+    "test": "testcafe chrome tests/"
   },
   "repository": {
     "type": "git",
@@ -25,7 +26,9 @@
     "node-stl": "^0.7.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.1"
+    "nodemon": "^2.0.1",
+    "testcafe": "^1.8.1",
+    "testcafe-reporter-xunit": "^2.1.0"
   },
   "engines": {
     "node": "12.16"

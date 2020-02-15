@@ -31,6 +31,6 @@
     "testcafe-reporter-xunit": "^2.1.0"
   },
   "engines": {
-    "node": "12.15"
+    "node": "12.16"
   }
 }

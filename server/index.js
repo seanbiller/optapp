@@ -1,6 +1,6 @@
 const express = require('express')
 const fileUpload = require('express-fileupload')
-const NodeStl = require('node-stl')
+// const NodeStl = require('node-stl')
 
 const app = express()
 
@@ -23,19 +23,25 @@ app.get('/', (request, response) => {
   response.sendFile('./client/index.html')
 })
 
-app.post('/model-info', (request, response) => {
-  // use the servers console to show what files came in
-  console.log(request.files)
+// app.post('/model-info', (request, response) => {
+//   // use the servers console to show what files came in
+//   console.log(request.files)
 
-  // process the stl file raw content as uploaded
-  let stlData = new NodeStl(request.files.stlfile.data, {density: 1.04})
-  console.log("Part Volume: " + stlData.volume)
+//   // process the stl file raw content as uploaded
+//   let stlData = new NodeStl(request.files.stlfile.data, {density: 1.04})
+//   console.log("Part Volume: " + stlData.volume)
 
-  // echo info back to the user
-  response.send(stlData)
-})
+//   // echo info back to the user
+//   response.send(stlData)
+// })
 
-app.listen(1337, () => { console.log('Listening on port 1337') })
+process.env.PORT || 1337;
+
+const port = process.env.PORT || 1337;
+
+app.listen(port, function() {
+  console.log('Our app is running on http://localhost:' + port);
+});
 
 
 module.exports = app

@@ -55,6 +55,7 @@
  *  var mesh = new THREE.Mesh(geometry, materials);
  */
 
+let n_faces = null;
 
 THREE.STLLoader = function ( manager ) {
 
@@ -97,7 +98,7 @@ THREE.STLLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype
 
 		function isBinary( data ) {
 
-			var expect, face_size, n_faces, reader;
+			var expect, face_size, reader;
 			reader = new DataView( data );
 			face_size = 50; // ( 32 / 8 * 3 ) + ( ( 32 / 8 * 3 ) * 3 ) + ( 16 / 8 );
 			n_faces = reader.getUint32( 80, true );
@@ -134,17 +135,11 @@ THREE.STLLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype
 		}
 
 		function matchDataViewAt( query, reader, offset ) {
-
 			// Check if each byte in query matches the corresponding byte from the current offset
-
 			for ( var i = 0, il = query.length; i < il; i ++ ) {
-
 				if ( query[ i ] !== reader.getUint8( offset + i, false ) ) return false;
-
 			}
-
 			return true;
-
 		}
 
 		function parseBinary( data ) {
@@ -392,3 +387,7 @@ THREE.STLLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype
 	}
 
 } );
+
+function getTriangleCount() {
+	return n_faces;
+}

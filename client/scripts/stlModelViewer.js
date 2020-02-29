@@ -1,11 +1,11 @@
-var geo = null;
-var volume = null;
-var mesh = null;
-var mesh_color = null;
-var controls = null;
-var visualBbox = null;
-var middle = null;
-var axesHelper = null;
+let geo = null;
+let volume = null;
+let mesh = null;
+let mesh_color = null;
+let controls = null;
+let visualBbox = null;
+let middle = null;
+let axesHelper = null;
 
 function stlModelViewer(geometry, elementID) {
   var elem = document.getElementById(elementID)
@@ -15,8 +15,9 @@ function stlModelViewer(geometry, elementID) {
     antialias: true,
     alpha: true
   });
+
   renderer.setSize(elem.clientWidth, elem.clientHeight);
-  elem.appendChild(renderer.domElement);
+  elem.appendChild(renderer.domElement, elem.childNodes[0]);
 
   window.addEventListener('resize', function () {
     renderer.setSize(elem.clientWidth, elem.clientHeight);
@@ -24,7 +25,7 @@ function stlModelViewer(geometry, elementID) {
     camera.updateProjectionMatrix();
   }, false);
 
-  controls = new THREE.OrbitControls(camera, renderer.domElement); // was 'var controls = new THREE.OrbitControls(camera, renderer.domElement);'
+  controls = new THREE.OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
   controls.rotateSpeed = 0.5;
   controls.dampingFactor = 0.1;
@@ -33,7 +34,6 @@ function stlModelViewer(geometry, elementID) {
   controls.autoRotateSpeed = 3.75;
 
   var scene = new THREE.Scene();
-  scene.add(new THREE.HemisphereLight(0xffffff, 1.5));
   camera.position.set(0, 0, 0);
   scene.add(camera);
 
@@ -85,19 +85,19 @@ function stlModelViewer(geometry, elementID) {
   scene.add(axesHelper);
   axesHelper.visible = false;
 
-  var pointLight = new THREE.PointLight(0xffffff, 0.3);
-  pointLight.position.x = 0;
-  pointLight.position.y = -25;
-  pointLight.position.z = 10;
-  camera.add(pointLight);	
+  scene.add(new THREE.HemisphereLight(0xffffff, 2.5));
+
+  var pointLight = new THREE.PointLight(0xffffff, 0.3); // 0xffffff
+  pointLight.position.set(0, -25, 10);
+  camera.add(pointLight); // look into differences between adding lights to camera v.s. scene
 
   /*******************************************************************************/
   /**Assigns calculated model data, such as volume, to html elements for display**/
-  geo=geometry;
+  geo = geometry;
 
   $id("model_bbox").innerHTML = x + " x " + y + " x " + z; // Displays the model's bounding box dimensions
   volume = getVolume().toFixed(2);
-  $id("model_volume").innerHTML = volume; // Displays the model's volume
+  $id("model_volume").innerHTML = numberWithCommas(volume); // Displays the model's volume
  
 
   /*******************************************************************************/
@@ -111,10 +111,6 @@ function stlModelViewer(geometry, elementID) {
   animate();
 }
 
-/*******************************************************************************/
-/*******************************************************************************/
-/*******************************************************************************/
-
 function $id(id) {
   return document.getElementById(id);
 }
@@ -125,7 +121,7 @@ function setAutoRotation(choice) {
   controls.update();
 }
 
-// Toggles the visibility for the x, y, and z axes on the canvas in which the model is rendered
+// Toggles the visibility for the x, y, and z axes on the canvas where the model is rendered
 function displayAxes(choice) {
   if (choice == true) { axesHelper.visible = true; }
   else { axesHelper.visible = false; }
@@ -136,7 +132,7 @@ function displayModelBbox(choice) {
   else { visualBbox.visible = false; }
 }
 
-function set_color(o, o_color, is_bg_color) { // unsure what lines 124 - 133 are for
+function set_color(o, o_color, is_bg_color) { // unsure what lines 140 - 150 are for
   is_bg_color=is_bg_color||false;
   
   if (is_bg_color) {
@@ -208,32 +204,49 @@ function signedVolumeOfTriangle(p1, p2, p3) {
 
 function calculatePrice() {
     var x = document.getElementById('resin').value;
-    var vl = volume;
-    switch (x)
-    {
+    let inLiters = volume/1000000 //convert to Liters
+    switch(x) {
+      case 'none':
+        var price = 0;
+        break;
       case 'PCLG':
-        var price = 59.90 * (vl/1000000);
-        document.getElementById('total_cost').innerHTML = '$' + price.toFixed(2) + ' USD';
+        var price = 59.90 * inLiters;
         break;
       case 'PCTR':
-        var price = 69.98 * (vl/1000000);
-        document.getElementById('total_cost').innerHTML = '$' + price.toFixed(2) + ' USD';
+        var price = 69.98 * inLiters;
         break;
       case 'P3D':
-        var price = 76.90 * (vl/1000000);
-        document.getElementById('total_cost').innerHTML = '$' + price.toFixed(2) + ' USD';
+        var price = 76.90 * inLiters;
         break;
       case 'BCO':
-        var price = 138.69 * (vl/1000000);
-        document.getElementById('total_cost').innerHTML = '$' + price.toFixed(2) + ' USD';
+        var price = 138.69 * inLiters;
         break;
       case 'BCx5':
-        var price = 142.99 * (vl/1000000);
-        document.getElementById('total_cost').innerHTML = '$' + price.toFixed(2) + ' USD';
+        var price = 142.99 * inLiters;
         break;
       case 'ZRS':
-        var price = 345.99 * (vl/1000000);
-        document.getElementById('total_cost').innerHTML = '$' + price.toFixed(2) + ' USD';
+        var price = 345.99 * inLiters;
         break;
+    }
+    document.getElementById('total_cost').innerHTML = '$' + numberWithCommas(price.toFixed(2)) + ' USD';
+}
+
+function numberWithCommas(x) {
+  var parts = x.toString().split(".");
+  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  return parts.join(".");
+}
+
+// Getting values for printing time
+function set_printing_time(z) {
+    var p = view_units == 2 ? 0:0;
+    var slider = document.getElementById("time");
+    var output = document.getElementById("ispeed");
+    var output1 = document.getElementById("itime");
+    output1.innerHTML = (slider.value/10) * numberWithCommas(z.toFixed(p)) + " seconds";
+    output.innerHTML = (slider.value/10) + " mm/sec";
+    slider.oninput = function() {
+        output1.innerHTML = (this.value/10) * numberWithCommas(z.toFixed(p)) + " seconds";
+        output.innerHTML = (this.value/10) + " mm/sec";
     }
 }

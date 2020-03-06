@@ -10,7 +10,7 @@ test('New Test', async t => {
             offsetY: 11
         })
         .click(Selector('label').withText('Choose .stl file'))
-        .setFilesToUpload(Selector('#uploadInput'), ['../client/sample-stl-files/GeneralFunctionalityTest.js'])
+        .setFilesToUpload(Selector('#uploadInput'), ['../client/sample-stl-files/twist_sample1_with_cap.stl'])
         .click(Selector('label').withText('On').find('[name="rotate_option"]'))
         .click(Selector('label').withText('Show').find('[name="bbox_option"]'))
         .click(Selector('label').withText('Show').nth(1).find('[name="axes_option"]'))

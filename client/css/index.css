@@ -1,6 +1,17 @@
-html {
-  height: 100%;
+html, body {
   margin: 0;
+  height: 100vh;
+  width: 100vw;
+  padding: 0;
+  background-color: black;
+}
+
+#wrap_all {
+  width: 100%;
+  height: 100vh;
+  position: static;
+  z-index: 2;
+  overflow: hidden;
 }
 
 .inner-container {
@@ -29,34 +40,19 @@ label {
   padding-left: 5%;
 }
 
-body {
-  height: 100%;
-  background-color: #000000;
-  background-repeat: no-repeat;
-  background-size: auto;
-  line-height: 1.5;
-}
-
 div.main {
-  height: 100%;
+  height: calc(100% - 80px); /* The 80px accounts for the header */
   background-image: url("https://cdn.glitch.com/3aca5361-a4b4-4e6e-bfe3-a97f345add51%2Foptbackground.jpg?v=1576639605549");
   background-repeat: no-repeat;
   background-size: 100%;
-  left: 0px;
-  top: 0px;
   color: rgb(197, 197, 197);
 }
 
 div.center {
   position: relative;
   width: 100%;
-  height: 60%;
+  height: calc(100% - 160px - 52px); /* The 160px accounts for the header and footer, and the 52px accounts for the button-container, who's height is(?) currently static */
   text-align: center;
-}
-
-.vertical-center { /* remove (redundant) */
-  height: 100%;
-  position: relative;
 }
 
 .display_panel {
@@ -71,6 +67,7 @@ div.fading-line {
   width: 100%;
   height: 1px;
   background: linear-gradient(to right, rgba(197, 197, 197, 1) 0%, rgba(197, 197, 197, 1) 75%, rgba(197, 197, 197, 0) 100%);
+  margin-bottom: 6px;
 }
 
 div.button-container {
@@ -95,18 +92,12 @@ input[type="file"] {
 input[type="radio"] {
   -webkit-appearance: none;
   -moz-appearance: none;
-  appearance: none;
-
   border-radius: 50%;
   width: 16px;
   height: 16px;
-
   border: 2px solid #999;
   transition: 0.2s all linear;
-  margin-right: 5px;
-
   position: relative;
-  top: 4px;
 }
 
 input[type="radio"]:checked {
@@ -188,16 +179,18 @@ button {
 .cinfo table {width: 100%; table-layout: fixed;}
 .cinfo tr {text-align: left; vertical-align: top;}
 .cinfo tr th {
-  padding-top: 5px; 
-  padding-bottom: 5px; 
+  padding-top: 3px; 
+  padding-bottom: 3px; 
   font-size: 1vw; 
+  font-weight: 400;
   white-space: nowrap;
 }
 .cinfo tr td {
   width: 100%;
-  padding-top: 5px; 
-  padding-bottom: 5px; 
+  padding-top: 3px; 
+  padding-bottom: 3px; 
   font-size: 1vw;  
+  font-weight: lighter;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -218,7 +211,6 @@ footer {
   text-align: center;
   font-size: 11px;
   padding: 10px 15px;
-  margin-bottom: 20px;
   background-color: rgb(0, 0, 0);
   color: white;
 }

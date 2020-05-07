@@ -55,7 +55,7 @@
  *  var mesh = new THREE.Mesh(geometry, materials);
  */
 
-let n_faces = null;
+let n_faces = null; // added by Connor Gerrits in order to keep track of a model's triangle face count
 
 THREE.STLLoader = function ( manager ) {
 
@@ -103,8 +103,6 @@ THREE.STLLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype
 			face_size = 50; // ( 32 / 8 * 3 ) + ( ( 32 / 8 * 3 ) * 3 ) + ( 16 / 8 );
 			n_faces = reader.getUint32( 80, true );
 			expect = 80 + ( 32 / 8 ) + face_size * n_faces;
-
-			console.log("Number of Triangles: " + n_faces)
 
 			if ( expect === reader.byteLength ) {
 				return true;
@@ -319,7 +317,7 @@ THREE.STLLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype
 
 					}
 
-					faceCounter ++;
+					faceCounter++;
 
 				}
 

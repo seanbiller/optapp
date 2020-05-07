@@ -70,8 +70,6 @@ function stlModelViewer(geometry, elementID) {
   visualBbox.visible = false;
 
   /*******************************************************************************/
-  /*******************************************************************************/
-
   geometry.center();
 
   var largestDimension = Math.max(geometry.boundingBox.max.x,
@@ -98,9 +96,6 @@ function stlModelViewer(geometry, elementID) {
   $id("model_bbox").innerHTML = x + " x " + y + " x " + z; // Displays the model's bounding box dimensions
   volume = getVolume().toFixed(2);
   $id("model_volume").innerHTML = numberWithCommas(volume); // Displays the model's volume
- 
-
-  /*******************************************************************************/
   /*******************************************************************************/
 
   var animate = function () {
@@ -121,7 +116,7 @@ function setAutoRotation(choice) {
   controls.update();
 }
 
-// Toggles the visibility for the x, y, and z axes on the canvas where the model is rendered
+// Toggles visibility for x, y, and z axes on the canvas where the model is rendered
 function displayAxes(choice) {
   if (choice == true) { axesHelper.visible = true; }
   else { axesHelper.visible = false; }
@@ -132,7 +127,7 @@ function displayModelBbox(choice) {
   else { visualBbox.visible = false; }
 }
 
-function set_color(o, o_color, is_bg_color) { // unsure what lines 140 - 150 are for
+function set_color(o, o_color, is_bg_color) {
   is_bg_color=is_bg_color||false;
   
   if (is_bg_color) {
@@ -162,7 +157,7 @@ function update_mesh_color() {
   mesh.material.color.set(parseInt(mesh_color.substr(1),16));
 }
 
-// Calculates the volume of the model being rendered
+// Calculates the volume of the model in mm^3
 function getVolume() {
   if (!geo.isBufferGeometry) {
     console.log("'geometry' must be an indexed or non-indexed buffer geometry");

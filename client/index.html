@@ -16,51 +16,50 @@
             let file_size = null;
 
             function generateStl() {
-                var file = document.getElementById("uploadInput").files[0]
+                const file = document.getElementById("uploadInput").files[0]
                 file_name = file.name;
-                file_size = file.size;
+                file_size = file.size + ' KB';
 
-                var reader = new FileReader();
+                let reader = new FileReader();
 
-                // set "on load" handler for reader
-                reader.onload = function (e) {
-                    var contents = reader.result;
-                    let loader = new THREE.STLLoader();
-
-                    /* -For those who are curious- 
-                    *
-                    * Although the stlLoader module has a .load() function
-                    * that takes in a static file path as a parameter
-                    * and passes it on to the file's .parse() function to
-                    * read through it's contents and return the parsed result
-                    * as a bufferGeometry object, we omitted the use of .load() from our code
-                    * due to the fact that it couldn't take in a user-uploaded file
-                    * as a parameter. 
-                    * 
-                    * We worked around this by plugging the file's data directly 
-                    * into loader.parse() and setting it equal to the variabe 'geometry',
-                    * bypassing the need for .load() altogether (we hope), and allowing us
-                    * to move on to generating our scene.
-                    */
-                    
-                    // BEGIN PULSATING "Parsing file contents..." ANIMATION
-                    let geometry = loader.parse(contents);
+                reader.addEventListener('progress', function(event) {
+                    let progress = Math.floor((event.loaded / event.total) * 100) + '%';
+                    console.log('Loading... ', file_name, file_size, progress); // ***This will be replaced with a visual animation on the web page***
+                });
+               
+                reader.addEventListener('load', function(event) {
+                    let contents = reader.result;
+                    let geometry = new THREE.STLLoader().parse(contents);
 
                     document.getElementById('stl_filename').innerHTML = file_name + '';
                     document.getElementById('stl_filesize').innerHTML = numberWithCommas(file_size) + ' bytes';
                     document.getElementById('num_triangles').innerHTML = numberWithCommas(getTriangleCount());
-                    // END PULSATING "Parsing file contents..." ANIMATION
-                    
-                    stlModelViewer(geometry, "model"); // ***HANDLES PULSATING "Rendering model..." ANIMATION START & END***
-                }
-                // read the file using the reader, triggering the 'onload' function declared above
-                if (reader.readAsBinaryString !== undefined) { reader.readAsBinaryString(file); } 
-                else { reader.readAsArrayBuffer(file); }
+
+                    stlModelViewer(geometry, "model");
+                }, false );
+
+                if (reader.readAsBinaryString !== undefined) reader.readAsBinaryString(file);
+                else reader.readAsArrayBuffer(file);
+
+                // reader.onload = function(event) {
+                //     let contents = reader.result;
+                //
+                //     let loader = new THREE.STLLoader();
+                //     let geometry = loader.parse(contents);
+                //
+                //     loader.load(`data:model/stl;base64,${contents}`, function (geometry) { // NOTE: This data input doesn't work
+                //          document.getElementById('stl_filename').innerHTML = file_name + '';
+                //          document.getElementById('stl_filesize').innerHTML = numberWithCommas(file_size) + ' bytes';
+                //          document.getElementById('num_triangles').innerHTML = numberWithCommas(getTriangleCount());
+                //          stlModelViewer(geometry, "model");
+                //     });
+                // }
+
+                // if (reader.readAsBinaryString !== undefined) reader.readAsBinaryString(file); 
+                // else reader.readAsArrayBuffer(file);
             }
         </script>
-
         <title>STL Model Viewer</title>
-        
     </head>
 
     <body>
@@ -89,106 +88,87 @@
                         </label>
                     </div>
                 </div>
-
-                <div class="center"> <!--FIX: Properly remove or rename each element's id-->
-                    <!-- <img src="https://cdn.glitch.com/3aca5361-a4b4-4e6e-bfe3-a97f345add51%2Foptbackground.jpg?v=1576639605549" class="background" width="1500" height="600" style="left: 0px"> -->
+                <div class="center"> <!--TODO: Properly remove or rename each element's id-->
                     <div style="width: 28%; height: 100%; display: inline-block; text-align: left;">
                         <div id="info" class="display_panel"> 
                             <div style="width: 100%; height: 100%;">
-                                <!-- <div class="vertical-center"> -->
-                                    <div id="info_display" class="cinfo" style="top:10%">
-                                        <span style="color:rgb(197, 197, 197); font-size: 1.3vw">Model Info</span>
-                                        <div class="fading-line"></div>
-                                        <table>
-                                            <tr>
-                                                <th>File Name: </th>
-                                                <td id="stl_filename" style="text-align: left;"></td>
-                                            </tr>
-                                            <tr>
-                                                <th>File Size: </th>
-                                                <td id="stl_filesize" style="text-align: left;"></td>
-                                            </tr>
-                                            <!-- <tr>
-                                                <th>Measuring Unit</th>
-                                                <td>
-                                                    <label>
-                                                        <input type="radio" id="rmm" onclick="set_file_units(1);" name="runits" value="0" checked /> mm
-                                                    </label>
-                                                    <label>
-                                                        <input type="radio" id="rin" onclick="set_file_units(2);" name="runits" value="1" /> in
-                                                    </label>
-                                                    <br>
-                                                </td>
-                                            </tr> -->
-                                            <tr>
-                                                <th>Bounding Box Size: </th>
-                                                <td id="model_bbox" style="text-align: left;"></td>
-                                            </tr>
-                                            <tr>
-                                                <th>Volume (<span id="vunits">mm</span><sup>3</sup>):</th>
-                                                <td id="model_volume" style="text-align: left;"></td>
-                                            </tr>
-                                            <tr>
-                                                <th>Triangle Count: </th>
-                                                <td id="num_triangles" style="text-align:left;"></td>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                    <div id="display_options" class="cinfo" style="bottom:10%">
-                                        <span style="color:rgb(197, 197, 197); font-size: 1.3vw">Display Options</span>
-                                        <div class="fading-line"></div>
-                                        <table>
-                                            <tr>
-                                                <th>Auto-Rotation</th>
-                                                <td>
-                                                    <label>
-                                                        <input type="radio" onclick="setAutoRotation(true);" name="rotate_option" /> On
-                                                    </label>
-                                                    <label>
-                                                        <input type="radio" onclick="setAutoRotation(false);" name="rotate_option" checked /> Off
-                                                    </label>
-                                                </td>
-                                            </tr>
-        
-                                            <tr>
-                                                <th>Model's Bounding Box</th>
-                                                <td>
-                                                    <label>
-                                                        <input type="radio" onclick="displayModelBbox(true);" name="bbox_option" /> Show
-                                                    </label>
-                                                    <label>
-                                                        <input type="radio" onclick="displayModelBbox(false);" name="bbox_option" checked /> Hide
-                                                    </label>
-                                                </td>
-                                            </tr>
-        
-                                            <tr>
-                                                <th>Axes [ x: R, y: G, z: B ]</th>
-                                                <td>
-                                                    <label>
-                                                        <input type="radio" onclick="displayAxes(true);" name="axes_option" /> Show
-                                                    </label>
-                                                    <label>
-                                                        <input type="radio" onclick="displayAxes(false);" name="axes_option" checked /> Hide
-                                                    </label>
-                                                </td>
-                                            </tr>
-        
-                                            <tr>
-                                                <th>Color</th>
-                                                <td id="cpal">
-                                                    <div class="cbar" id="black_color" onclick="set_color(this,'#1d1d1d');" style="background:#1d1d1d;"></div>
-                                                    <div class="cbar" id="white_color" onclick="set_color(this,'#FFFFFF');" style="background:#FFFFFF;"></div>                                                    
-                                                    <div class="cbar" id="green_color" onclick="set_color(this,'#027902');" style="background:#027902;"></div>
-                                                    <div class="cbar" id="red_color" onclick="set_color(this,'#970000');" style="background:#970000;"></div>                                                    
-                                                    <div class="cbar" id="gray_color" onclick="set_color(this,'#909090');" style="background:#909090;"></div>                                                    
-                                                    <div class="cbar" id="darkblue_color" onclick="set_color(this,'#1128a0');" style="background:#1128a0;"></div>
-                                                    <div class="cbar" id="brown_color" onclick="set_color(this,'#654321');" style="background:#654321;"></div>                
-                                                </td>
-                                            </tr>						
-                                        </table>
-                                    </div>
-                                <!-- </div>       -->
+                                <div id="info_display" class="cinfo" style="top:10%">
+                                    <span style="color:rgb(197, 197, 197); font-size: 1.3vw">Model Info</span>
+                                    <div class="fading-line"></div>
+                                    <table>
+                                        <tr>
+                                            <th>File Name: </th>
+                                            <td id="stl_filename" style="text-align: left;"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>File Size: </th>
+                                            <td id="stl_filesize" style="text-align: left;"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Bounding Box Size: </th>
+                                            <td id="model_bbox" style="text-align: left;"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Volume (<span id="vunits">mm</span><sup>3</sup>):</th>
+                                            <td id="model_volume" style="text-align: left;"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Triangle Count: </th>
+                                            <td id="num_triangles" style="text-align:left;"></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div id="display_options" class="cinfo" style="bottom:10%">
+                                    <span style="color:rgb(197, 197, 197); font-size: 1.3vw">Display Options</span>
+                                    <div class="fading-line"></div>
+                                    <table>
+                                        <tr>
+                                            <th>Auto-Rotation</th>
+                                            <td>
+                                                <label>
+                                                    <input type="radio" onclick="setAutoRotation(true);" name="rotate_option" /> On
+                                                </label>
+                                                <label>
+                                                    <input type="radio" onclick="setAutoRotation(false);" name="rotate_option" checked /> Off
+                                                </label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Model's Bounding Box</th>
+                                            <td>
+                                                <label>
+                                                    <input type="radio" onclick="displayModelBbox(true);" name="bbox_option" /> Show
+                                                </label>
+                                                <label>
+                                                    <input type="radio" onclick="displayModelBbox(false);" name="bbox_option" checked /> Hide
+                                                </label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Axes [ x: R, y: G, z: B ]</th>
+                                            <td>
+                                                <label>
+                                                    <input type="radio" onclick="displayAxes(true);" name="axes_option" /> Show
+                                                </label>
+                                                <label>
+                                                    <input type="radio" onclick="displayAxes(false);" name="axes_option" checked /> Hide
+                                                </label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Color</th>
+                                            <td id="cpal">
+                                                <div class="cbar" id="black_color" onclick="set_color(this,'#1d1d1d');" style="background:#1d1d1d;"></div>
+                                                <div class="cbar" id="white_color" onclick="set_color(this,'#FFFFFF');" style="background:#FFFFFF;"></div>                                                    
+                                                <div class="cbar" id="green_color" onclick="set_color(this,'#027902');" style="background:#027902;"></div>
+                                                <div class="cbar" id="red_color" onclick="set_color(this,'#970000');" style="background:#970000;"></div>                                                    
+                                                <div class="cbar" id="gray_color" onclick="set_color(this,'#909090');" style="background:#909090;"></div>                                                    
+                                                <div class="cbar" id="darkblue_color" onclick="set_color(this,'#1128a0');" style="background:#1128a0;"></div>
+                                                <div class="cbar" id="brown_color" onclick="set_color(this,'#654321');" style="background:#654321;"></div>                
+                                            </td>
+                                        </tr>						
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -198,53 +178,51 @@
                     <div style="width: 28%; height: 100%; display: inline-block; text-align: left;">
                         <div id="info" class="display_panel"> 
                             <div style="width: 100%; height: 100%;">
-                                <!-- <div class="vertical-center"> -->
-                                    <div id="info_display" class="cinfo" style="top:25%">
-                                        <span style="color:rgb(197, 197, 197); font-size: 1.3vw">Model Printing Options</span>
-                                        <div class="fading-line"></div>
-                                        <table>
-                                            <tr>
-                                                <th>Resin Type </th>
-                                                <td>
-                                                    <select id="resin" style="width: 100%;" onchange="calculatePrice();">
-                                                        <option value="none"></option>
-                                                        <option value="PCLG">$59.90/Liter PrimaCreator Value UV/DLP Resin - Lightgrey </option>
-                                                        <option value="PCTR">$69.98/Liter PrimaCreator Value UV/DLP Resin - Transparent-Red</option>
-                                                        <option value="P3D">$76.90/Liter Photocentric3D UV DLP Firm Resin - Grey</option>
-                                                        <option value="BCO">$138.69/Liter BlueCast Original DLP Resin - Blue</option>
-                                                        <option value="BCx5">$142.99/Liter BlueCast x5 Resin</option>
-                                                        <option value="ZRS">$345.99/Liter Zortrax Raydent Surgical Guide Resin</option>
-                                                    </select>
-                                                </td> 
-                                            </tr>
-                                            <tr>
-                                                <th>Printing Speed </th>
-                                                <td>
-                                                    <input type="range" id="time" min="1" max="4" value="1" style="width: 100%;">
-                                                </td>
-                                                <!-- <td id="ispeed" style="text-align:right;"></td> -->
-                                            </tr>
-                                        </table>
-                                    </div>
-                                    <div id="display_options" class="cinfo" style="bottom:25%">
-                                        <span style="color:rgb(197, 197, 197); font-size: 1.3vw">Total Cost</span>
-                                        <div class="fading-line"></div>
-                                        <div id="total_cost" class="center"><br></div>
-                                    </div>
-                                <!-- </div>       -->
+                                <div id="info_display" class="cinfo" style="top:25%">
+                                    <span style="color:rgb(197, 197, 197); font-size: 1.3vw">Model Printing Options</span>
+                                    <div class="fading-line"></div>
+                                    <table>
+                                        <tr>
+                                            <th>Resin Type </th>
+                                            <td>
+                                                <select id="resin" style="width: 100%;" onchange="calculatePrice();">
+                                                    <option value="none"></option>
+                                                    <option value="PCLG">$59.90/Liter PrimaCreator Value UV/DLP Resin - Lightgrey </option>
+                                                    <option value="PCTR">$69.98/Liter PrimaCreator Value UV/DLP Resin - Transparent-Red</option>
+                                                    <option value="P3D">$76.90/Liter Photocentric3D UV DLP Firm Resin - Grey</option>
+                                                    <option value="BCO">$138.69/Liter BlueCast Original DLP Resin - Blue</option>
+                                                    <option value="BCx5">$142.99/Liter BlueCast x5 Resin</option>
+                                                    <option value="ZRS">$345.99/Liter Zortrax Raydent Surgical Guide Resin</option>
+                                                </select>
+                                            </td> 
+                                        </tr>
+                                        <tr>
+                                            <th>Printing Speed </th>
+                                            <td>
+                                                <input type="range" id="time" min="1" max="4" value="1" style="width: 100%;">
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div id="display_options" class="cinfo" style="bottom:25%">
+                                    <span style="color:rgb(197, 197, 197); font-size: 1.3vw">Total Cost</span>
+                                    <div class="fading-line"></div>
+                                    <div id="total_cost" class="center"><br></div>
+                                </div>
                             </div>
                         </div>
                     </div>
-
                     <!-- Footer  -->
                     <footer>
                         <p> @ OPT Industries. All rights reserved.</p>
                     </footer>
                 </div>
+
             <!-- End main -->
             </div>
         <!-- End wrap_all -->
         </div>
+
         <!-- JavaScript modules being used  -->
         <script src="/client/scripts/three.min.js"></script>
         <script src="/client/scripts/OrbitControls.js"></script>

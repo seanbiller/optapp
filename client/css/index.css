@@ -51,7 +51,7 @@ div.main {
 div.center {
   position: relative;
   width: 100%;
-  height: calc(100% - 160px - 52px); /* The 160px accounts for the header and footer, and the 52px accounts for the button-container, who's height is(?) currently static */
+  height: calc(100% - 160px - 52px); /* 160px accounts for header & footer, 52px accounts for the button-container, who's height is(?) currently static */
   text-align: center;
 }
 
@@ -72,17 +72,19 @@ div.fading-line {
 
 div.button-container {
   color: #ccc;
-  position: relative;
   width: 100%;
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
   padding: 10px 0px;
+  height: 55px;
 }
 
 .button_panel {
-  display: inline-block;
+  /* display: inline-block;
   position: relative;
-  vertical-align: top;
-  padding: 0px 25px;
+  vertical-align: top; */
+  padding: 0px 5px; 
 }
 
 input[type="file"] {
@@ -118,8 +120,6 @@ button {
 .custom-btn-overlay {
   border: 1px solid rgba(204, 204, 204);
   border-radius: 4px;
-  background-color: none;
-  display: inline-block;
   text-align: center;
   padding-right: 5px;
   padding-left: 5px;
@@ -128,7 +128,7 @@ button {
 }
 
 .custom-btn-overlay span:before {
-  content: '[';
+  content: '>';
   color: white;
   font-size: 20px;
   position: relative;
@@ -139,7 +139,7 @@ button {
 }
 
 .custom-btn-overlay span:after {
-  content: ']';
+  content: '<';
   color: white;
   font-size: 20px;
   position: relative;
@@ -151,6 +151,7 @@ button {
 
 .custom-btn-overlay:hover {
   background-color: rgba(0, 0, 0, 0.3);
+  border: 2px solid rgb(75, 195, 64);
 }
 
 .custom-btn-overlay:hover span:before {

@@ -12,52 +12,135 @@
         <!-- JsPdf CDN for creating PDF of Page -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
         <script>
-            let file_name = null;
-            let file_size = null;
+            let volume = null;
+            let mesh = null;
+            let controls = null;
+            let visualBbox = null;
+            let axesHelper = null;
+            let camera = null;
+            let largestDimension = null;
 
-            function generateStl() {
+            function resetCameraPosition() { // FIX: damping is still in effect upon orientation reset
+                document.getElementById("auto_rotate").checked = false;
+                controls.enableDamping = false;
+                controls.autoRotate = false;
+                camera.position.x = 0;
+                camera.position.z = largestDimension * 3.5;
+                camera.position.y = largestDimension * 1.5;
+            }
+
+            function renderStl() {
                 const file = document.getElementById("uploadInput").files[0]
-                file_name = file.name;
-                file_size = file.size + ' KB';
-
-                let reader = new FileReader();
-
-                reader.addEventListener('progress', function(event) {
-                    let progress = Math.floor((event.loaded / event.total) * 100) + '%';
-                    console.log('Loading... ', file_name, file_size, progress); // ***This will be replaced with a visual animation on the web page***
-                });
+                const reader = new FileReader();
                
-                reader.addEventListener('load', function(event) {
-                    let contents = reader.result;
-                    let geometry = new THREE.STLLoader().parse(contents);
+                reader.onload = function(event) {
+                    console.timeEnd("first") // FIRST TIMER END
+                    console.log("File Successfully Uploaded")
 
-                    document.getElementById('stl_filename').innerHTML = file_name + '';
-                    document.getElementById('stl_filesize').innerHTML = numberWithCommas(file_size) + ' bytes';
+                    console.log("Parsing File Contents...");
+                    console.time("second") // SECOND TIMER START
+                    const loader = new THREE.STLLoader();
+                    const geometry = loader.parse(this.result); // "this.result" can also be written as "reader.result"
+                    console.timeEnd("second") // SECOND TIMER END
+                    console.log("Finished Parsing File Contents")
+
+                    console.log("Rendering Model & Scene...")
+                    console.time("third") // THIRD TIMER START
+                    let elem = document.getElementById("model");
+                    if (elem.hasChildNodes()) elem.removeChild(elem.firstChild); // Clears the canvas whenever a new .stl file is selected
+
+                    let renderer = new THREE.WebGLRenderer({antialias: true, alpha: true});
+                    let canvas = renderer.domElement;
+                    camera = new THREE.PerspectiveCamera(55, elem.clientWidth / elem.clientHeight, .01, 10000);
+                    camera.position.set(0, 0, 0);
+
+                    renderer.setSize(elem.clientWidth, elem.clientHeight);
+                    elem.appendChild(canvas);
+
+                    window.addEventListener('resize', function () {
+                        renderer.setSize(elem.clientWidth, elem.clientHeight);
+                        camera.aspect = elem.clientWidth / elem.clientHeight;
+                        camera.updateProjectionMatrix();
+                    }, false);
+
+                    controls = new THREE.OrbitControls(camera, canvas);
+                    controls.enableDamping = true;
+                    controls.rotateSpeed = 0.5;
+                    controls.dampingFactor = 0.1;
+                    controls.enableZoom = true;
+                    controls.autoRotate = false;
+                    controls.autoRotateSpeed = 3.75;
+
+                    let scene = new THREE.Scene();
+                    scene.add(camera);
+
+                    if (geometry.hasColors) var material = new THREE.MeshPhongMaterial({ opacity: geometry.alpha, vertexColors: THREE.VertexColors });
+                    else var material = new THREE.MeshStandardMaterial();
+                    material.side = THREE.DoubleSide; // NOTE: THREE.DoubleSide not supported in Internet Explorer
+
+                    geometry.computeVertexNormals();
+                    geometry.computeFaceNormals();
+                    geometry.normalsNeedUpdate = true;
+
+                    mesh = new THREE.Mesh(geometry, material);
+                    scene.add(mesh);
+
+                    geometry.computeBoundingBox(); // The model's bounding box data is computed/updated
+                    let bbox = geometry.boundingBox; // The computed/updated bounding box data is stored in variable 'bbox'
+                    visualBbox = new THREE.Box3Helper(bbox, 0xffff00); // Box3Helper uses bbox's data to create a visual representation of the model's bounding box, set to a default color
+                    let middle = new THREE.Vector3(geometry.center()); // The point vector located at the model's center is stored in the new Vector3 object 'middle'
+                    bbox.getSize(middle); // Using the central point vector for reference, the bounding box's {x,y,z} dimensions are found and saved to 'middle'
+                    scene.add(visualBbox);
+                    visualBbox.visible = false;
+
+                    geometry.center();
+
+                    let x = middle.x.toFixed(1);
+                    let y = middle.y.toFixed(1);
+                    let z = middle.z.toFixed(1);
+                    largestDimension = Math.max(geometry.boundingBox.max.x,
+                        geometry.boundingBox.max.y,
+                        geometry.boundingBox.max.z)
+                    camera.position.z = largestDimension * 3.5;
+                    camera.position.y = largestDimension * 1.5;
+
+                    axesHelper = new THREE.AxesHelper(largestDimension * 1.5);
+                    scene.add(axesHelper);
+                    axesHelper.visible = false;
+
+                    scene.add(new THREE.AmbientLight(0xffffff, .5));
+                    let pointLight = new THREE.PointLight(0xffffff, 0.3);
+                    pointLight.position.set(0, -25, 10);
+                    camera.add(pointLight);
+
+                    let animate = function () {
+                        requestAnimationFrame(animate);
+                        controls.update();
+                        renderer.render(scene, camera);
+                    };
+                    animate();
+
+                    volume = getVolume(geometry).toFixed(2);
+                    document.getElementById('stl_filename').innerHTML = file.name + '';
+                    document.getElementById('stl_filesize').innerHTML = numberWithCommas(file.size) + ' bytes';
+                    document.getElementById("model_bbox").innerHTML = x + " x " + y + " x " + z;
+                    document.getElementById("model_volume").innerHTML = numberWithCommas(volume);
                     document.getElementById('num_triangles').innerHTML = numberWithCommas(getTriangleCount());
+                    console.timeEnd("third") // THIRD TIMER END
+                    console.log("Render Complete")
+                };
 
-                    stlModelViewer(geometry, "model");
-                }, false );
+                console.log("Uploading Selected File...");
+                console.time("first"); // FIRST TIMER START
+                reader.onprogress = function(event) {
+                    let progress = parseInt((event.loaded / event.total) * 100) + '%';
+                    console.log('Loading... ', file.name, file.size, progress); // ***This will be replaced with a visual animation on the web page***
+                };
 
                 if (reader.readAsBinaryString !== undefined) reader.readAsBinaryString(file);
                 else reader.readAsArrayBuffer(file);
-
-                // reader.onload = function(event) {
-                //     let contents = reader.result;
-                //
-                //     let loader = new THREE.STLLoader();
-                //     let geometry = loader.parse(contents);
-                //
-                //     loader.load(`data:model/stl;base64,${contents}`, function (geometry) { // NOTE: This data input doesn't work
-                //          document.getElementById('stl_filename').innerHTML = file_name + '';
-                //          document.getElementById('stl_filesize').innerHTML = numberWithCommas(file_size) + ' bytes';
-                //          document.getElementById('num_triangles').innerHTML = numberWithCommas(getTriangleCount());
-                //          stlModelViewer(geometry, "model");
-                //     });
-                // }
-
-                // if (reader.readAsBinaryString !== undefined) reader.readAsBinaryString(file); 
-                // else reader.readAsArrayBuffer(file);
             }
+
         </script>
         <title>STL Model Viewer</title>
     </head>
@@ -78,7 +161,7 @@
                     <div class="button_panel">
                         <label class="custom-btn-overlay">
                         <span> Choose .stl file </span>
-                            <input id="uploadInput" type="file" name="myFiles" onchange="generateStl();">
+                            <input id="uploadInput" type="file" accept=".stl" onchange="renderStl()">
                         </label>
                     </div>
                     <div class="button_panel">
@@ -126,10 +209,11 @@
                                             <th>Auto-Rotation</th>
                                             <td>
                                                 <label>
-                                                    <input type="radio" onclick="setAutoRotation(true);" name="rotate_option" /> On
+                                                    <input type="checkbox" id="auto_rotate" onclick="setAutoRotation();" />
                                                 </label>
-                                                <label>
-                                                    <input type="radio" onclick="setAutoRotation(false);" name="rotate_option" checked /> Off
+                                                <label class="custom-btn-overlay" style="margin-left: 15px; display: inline">
+                                                    <span>reset orientation</span>
+                                                    <button onclick="resetCameraPosition()"></button>
                                                 </label>
                                             </td>
                                         </tr>
@@ -137,10 +221,7 @@
                                             <th>Model's Bounding Box</th>
                                             <td>
                                                 <label>
-                                                    <input type="radio" onclick="displayModelBbox(true);" name="bbox_option" /> Show
-                                                </label>
-                                                <label>
-                                                    <input type="radio" onclick="displayModelBbox(false);" name="bbox_option" checked /> Hide
+                                                    <input type="checkbox" id="model_bbox_visual" onclick="displayModelBbox();"/>
                                                 </label>
                                             </td>
                                         </tr>
@@ -148,10 +229,7 @@
                                             <th>Axes [ x: R, y: G, z: B ]</th>
                                             <td>
                                                 <label>
-                                                    <input type="radio" onclick="displayAxes(true);" name="axes_option" /> Show
-                                                </label>
-                                                <label>
-                                                    <input type="radio" onclick="displayAxes(false);" name="axes_option" checked /> Hide
+                                                    <input type="checkbox" id="model_axis" onclick="displayAxes();"/>
                                                 </label>
                                             </td>
                                         </tr>
@@ -213,13 +291,15 @@
                         </div>
                     </div>
                     <!-- Footer  -->
-                    <footer>
+                    <!-- <footer>
                         <p> @ OPT Industries. All rights reserved.</p>
-                    </footer>
+                    </footer> -->
                 </div>
-
             <!-- End main -->
             </div>
+            <footer>
+                <p> @ OPT Industries. All rights reserved.</p>
+            </footer>
         <!-- End wrap_all -->
         </div>
 
